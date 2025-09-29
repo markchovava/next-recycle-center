@@ -4,13 +4,13 @@ import React, { useState } from 'react'
 import { IoClose } from 'react-icons/io5';
 import { toast } from 'react-toastify';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
-import Heading2 from '@/_components/headings/Heading2';
-import SpacerTertiary from '@/_components/spacers/SpacerTertiary';
 import TitlePrimary from '@/_components/titles/TitlePrimary';
 import TextInputPrimary from '@/_components/forms/TextInputPrimary';
 import ButtonSubmit from '@/_components/buttons/ButtonSubmit';
 import TextAreaPrimary from '@/_components/forms/TextAreaPrimary';
 import SelectInputPrimary from '@/_components/forms/SelectInputPrimary';
+import { NewsEntity } from '@/_data/entity/NewsEntity';
+import { PublishData } from '@/_data/sample/PublishData';
 
 
 
@@ -30,28 +30,12 @@ interface UserAddModalInterface{
 
 
 
-export const UserEntity = {
-    name: "",
-    email: "",
-    address: "",
-    phone: "",
-    password: "",
-    code: "",
-    isAdmin: false,
-}
-
-
-const RolesData = [
-  { value: 'admin', label: 'Admin' },
-  { value: 'user', label: 'User' },
-]
-
 export default function UserAddModal({
         isModal, 
         setIsModal
     }: UserAddModalInterface
 ) {
-    const [data, setData] = useState(UserEntity)
+    const [data, setData] = useState(NewsEntity)
     const [isSubmit, setIsSubmit] = useState<boolean>(false)
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement> | 
@@ -108,42 +92,24 @@ export default function UserAddModal({
                             label='Name:' 
                             name='name' 
                             type="text"
-                            value={data.name} 
-                            placeholder='Enter your Name...'
+                            value={data.title} 
+                            placeholder='Enter your Title...'
                             onChange={handleInput} 
                         />
-                        <TextInputPrimary
-                            label='Email:' 
-                            name='email' 
-                            type="email"
-                            value={data.email} 
-                            placeholder='Enter your Email...'
-                            onChange={handleInput} 
-                        />
-                        <TextInputPrimary
-                            label='Phone Number:' 
-                            name='phone' 
-                            type="text"
-                            value={data.phone} 
-                            placeholder='Enter your Phone Number...'
-                            onChange={handleInput} 
-                        />
-                        <TextInputPrimary
-                            label='Address:' 
-                            name='address' 
-                            type="text"
-                            value={data.address} 
-                            placeholder='Enter your Address...'
+                        <TextAreaPrimary
+                            label='Details:' 
+                            name='details' 
+                            value={data.details} 
+                            placeholder='Enter your Details...'
                             onChange={handleInput} 
                         />
                         <SelectInputPrimary
-                            label='Role:'
-                            name='role'
-                            value={data.isAdmin ? 'admin' : 'user'}
-                            dbData={RolesData}
+                            label='Publish:'
+                            name='publish'
+                            value={data.publish}
+                            dbData={PublishData}
                             onChange={handleInput}
                         />
-
                         <div className='w-full flex items-center justify-center pt-1'>
                             <ButtonSubmit 
                                 title='Submit' 

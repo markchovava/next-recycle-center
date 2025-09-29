@@ -5,8 +5,11 @@ import TitlePrimary from "@/_components/titles/TitlePrimary";
 import { useState } from "react";
 import { IoSearch } from "react-icons/io5";
 import { GoDotFill } from "react-icons/go";
-import { toast } from "react-toastify";
 import UserAddModal from "./UserAddModal";
+import ButtonPaginate from "@/_components/buttons/ButtonPaginate";
+import { FaEye } from "react-icons/fa";
+import { FaDeleteLeft } from "react-icons/fa6";
+import Link from "next/link";
 
 
 const domData = {
@@ -42,17 +45,17 @@ export default function UserListPage() {
 
       <section className="w-full lg:overflow-hidden overflow-scroll">
         <div className='lg:w-[100%] w-[70rem]'>
-
+          {/* Search Bar */}
           <section className="flex lg:flex-row flex-col items-center justify-between gap-4 mb-4">
-            <form onSubmit={handleSearch} className="lg:w-[60%] w-full flex items-center justify-start rounded-xl border border-gray-300">
+            <form onSubmit={handleSearch} className="lg:w-[60%] w-full flex items-center justify-start rounded-lg border border-gray-300">
               <input 
                 type="text" 
                 placeholder="Enter Name" 
                 value={data.search}
                 onChange={(e) => setData({...data, search: e.target.value})}
-                className="flex-1 py-3 px-4 outline-none rounded-l-full" 
+                className="flex-1 py-2 px-4 outline-none rounded-l-full" 
               />
-              <button type="submit" className="group px-6 py-3 border-l border-gray-300 rounded-r-full">
+              <button type="submit" className="group px-6 py-2 border-l border-gray-300 rounded-r-full">
                 {data.isSearch ? 
                 <GoDotFill className="cursor-pointer text-2xl animate-pulse text-gray-900" />
                 :
@@ -63,11 +66,11 @@ export default function UserListPage() {
             <ButtonPrimary
               onClick={() => setIsModal(!isModal)}
               title='Add'
-              css="px-8 py-3"  
+              css="px-8 py-2"  
             />
           </section>
 
-          {/* Header */}
+          {/* HEADER */}
           <section className="w-full bg-gray-300 font-bold text-lg border border-gray-400 flex items-center justify-start">
             <div className="flex-5 border-r border-gray-400 px-2 py-1">NAME</div>
             <div className="flex-4 border-r border-gray-400 px-2 py-1">EMAIL</div>
@@ -75,16 +78,33 @@ export default function UserListPage() {
             <div className="flex-2 px-2 border-gray-400 py-1 text-end">ACTION</div>
           </section>
           
+          {/* ITEMS */}
           {[...Array(5)].map((i, key) => (
             <section key={key} className="w-full border-x border-b border-gray-400 flex items-center justify-start">
               <div className="flex-5 border-r border-gray-400 px-2 py-1">NAME</div>
               <div className="flex-4 border-r border-gray-400 px-2 py-1">EMAIL</div>
               <div className="flex-3 border-r border-gray-400 px-2 py-1">ROLE</div>
-              <div className="flex-2 px-2 border-gray-400 py-1 text-end">ACTION</div>
+              <div className="flex-2 px-2 border-gray-400 py-1 text-end flex items-center justify-end gap-3">
+                <button className="cursor-pointer group">
+                  <Link href={`/admin/user/1`}>
+                  <FaEye className="text-xl text-gray-800 group-hover:text-green-600 group-hover:scale-110 ease-initial transition-all duration-200" />
+                  </Link>
+                </button>
+                <button className="cursor-pointer group">
+                  <FaDeleteLeft className="text-xl text-gray-800 group-hover:text-red-600 group-hover:scale-110 ease-initial transition-all duration-200" />
+                </button>
+              </div>
             </section>
           ))}
 
         </div>
+      </section>
+      
+      <SpacerTertiary />
+      <section className="w-full flex items-center justify-end gap-3 mt-4">
+        <p className="font-light italic">Showing 1 to 5 of 5 entries</p>
+        <ButtonPaginate direction="left"  />
+        <ButtonPaginate direction="right"  />
       </section>
    
     </section>
