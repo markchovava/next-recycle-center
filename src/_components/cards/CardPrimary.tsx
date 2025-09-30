@@ -9,6 +9,8 @@ import { BiHelpCircle } from "react-icons/bi";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
 import { BsInfoCircle } from "react-icons/bs";
+import { FaQuoteLeft } from "react-icons/fa";
+import { RiContactsLine } from "react-icons/ri";
 import Link from "next/link";
 
 interface CardPrimaryProps{
@@ -32,6 +34,10 @@ export default function CardPrimary({dbData}: { dbData: CardPrimaryProps }) {
             <MdRecycling className="text-[3.5rem]" /> : 
         iconType === "user" ?
             <FaRegUser className="text-[3.5rem]" /> : 
+        iconType === "faq" ?
+            <FaQuoteLeft className="text-[3.5rem]" /> : 
+        iconType === "contact" ?
+            <RiContactsLine className="text-[3.5rem]" /> : 
         iconType === "news" ?
             <FaRegNewspaper className="text-[3.5rem]" /> : 
         iconType === "info" ?

@@ -1,6 +1,6 @@
 "use client"
 
-interface TextInputPrimaryProps {
+interface TextInputSecondaryProps {
     type?: string,
     label?: string
     name: string,
@@ -12,13 +12,13 @@ interface TextInputPrimaryProps {
 
 
 
-export default function SelectInputPrimary({
+export default function SelectInputSecondary({
   label, 
   name, 
   value, 
   onChange, 
   dbData
-}: TextInputPrimaryProps
+}: TextInputSecondaryProps
 ) {
 
   return (
@@ -31,9 +31,7 @@ export default function SelectInputPrimary({
             className='w-full px-3 py-2 rounded-lg outline-none border border-gray-300 focus:border-gray-500 ease-initial duration-200 transition-all'>
                 <option value="" disabled>Select an option</option>
                 {dbData.map((i, key) => (
-                    <option key={key} value={i.value ? i.value : i.name}>
-                      {i.label ? i.label : i.name}
-                    </option>
+                    <option key={key} value={i}>{i}</option>
                 ))}
                
             </select>

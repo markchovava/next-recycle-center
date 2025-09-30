@@ -8,8 +8,8 @@ import { useState } from "react";
 import { FaDeleteLeft, FaEye } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
 import { IoSearch } from "react-icons/io5";
-import { ScheduleData } from "@/_data/sample/ScheduleData";
-import ScheduleAddModal from "./ScheduleAddModal";
+import { MessageData } from "@/_data/sample/MessageData";
+import MessageAddModal from "./MessageAddModal";
 
 
 
@@ -19,7 +19,7 @@ const domData = {
 }
 
 
-export default function ScheduleListPage() {
+export default function MessageListPage() {
   const [isModal, setIsModal] = useState<boolean>(false);
   const [data, setData] = useState(domData)
 
@@ -44,7 +44,7 @@ export default function ScheduleListPage() {
   return (
     <>
      <section className='mx-auto w-[92%]'>
-        <TitlePrimary title='Schedules List' />
+        <TitlePrimary title='Messages List' />
         <SpacerTertiary />
 
         <section className="w-full lg:overflow-hidden overflow-scroll">
@@ -76,26 +76,23 @@ export default function ScheduleListPage() {
 
                 {/* HEADER */}
                 <section className="w-full bg-gray-300 font-bold text-lg border border-gray-400 flex items-center justify-start">
-                <div className="flex-5 border-r border-gray-400 px-2 py-1">DATE & TIME</div>
-                <div className="flex-4 border-r border-gray-400 px-2 py-1">CENTER</div>
-                <div className="flex-4 border-r border-gray-400 px-2 py-1">USER</div>
+                <div className="flex-5 border-r border-gray-400 px-2 py-1">TITLE</div>
+                <div className="flex-4 border-r border-gray-400 px-2 py-1">EMAIL</div>
+                <div className="flex-3 border-r border-gray-400 px-2 py-1">CREATED</div>
                 <div className="flex-2 px-2 border-gray-400 py-1 text-end">ACTION</div>
                 </section>
                 
                 {/* ITEMS */}
-                {ScheduleData.map((i, key) => (
+                {MessageData.map((i, key) => (
                 <section key={key} className="w-full border-x border-b border-gray-400 flex items-center justify-start">
-                    <div className="flex-5 border-r border-gray-400 px-2 py-1">
-                      <div>Date: {i.createdAt}</div>
-                      <div>Time: {i.time}</div>
-                    </div>
+                    <div className="flex-5 border-r border-gray-400 px-2 py-1">{i.title}</div>
                     <div className="flex-4 border-r border-gray-400 px-2 py-1">
-                    {i.center}
+                    {i.userId}
                     </div>
-                    <div className="flex-4 border-r border-gray-400 px-2 py-1">{i.userId}</div>
+                    <div className="flex-3 border-r border-gray-400 px-2 py-1">{i.createdAt}</div>
                     <div className="flex-2 px-2 border-gray-400 py-1 text-end flex items-center justify-end gap-3">
                     <button className="cursor-pointer group">
-                    <Link href={`/admin/schedule/${i.id}`}>
+                    <Link href={`/admin/message/${i.id}`}>
                         <FaEye className="text-xl text-gray-800 group-hover:text-green-600 group-hover:scale-110 ease-initial transition-all duration-200" />
                     </Link>
                     </button>
@@ -118,8 +115,7 @@ export default function ScheduleListPage() {
         </section>
       </section>
 
-      <ScheduleAddModal isModal={isModal} setIsModal={setIsModal} />
+      <MessageAddModal isModal={isModal} setIsModal={setIsModal} />
     </>
   )
 }
-

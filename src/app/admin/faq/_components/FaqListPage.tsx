@@ -4,13 +4,13 @@ import ButtonPaginate from "@/_components/buttons/ButtonPaginate";
 import ButtonPrimary from "@/_components/buttons/ButtonPrimary";
 import SpacerTertiary from "@/_components/spacers/SpacerTertiary";
 import TitlePrimary from "@/_components/titles/TitlePrimary";
-import { CenterData } from "@/_data/sample/CenterData";
 import Link from "next/link";
 import { useState } from "react";
 import { FaDeleteLeft, FaEye } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
 import { IoSearch } from "react-icons/io5";
-import CenterAddModal from "./CenterAddModal";
+import FaqAddModal from "./FaqAddModal";
+import { FaqData } from "@/_data/sample/FaqData";
 
 
 
@@ -21,7 +21,7 @@ const domData = {
 }
 
 
-export default function CenterListPage() {
+export default function FaqListPage() {
   const [isModal, setIsModal] = useState<boolean>(false);
   const [data, setData] = useState(domData)
 
@@ -45,7 +45,7 @@ export default function CenterListPage() {
   return (
     <>
      <section className='mx-auto w-[92%]'>
-        <TitlePrimary title='Recycle Centers List' />
+        <TitlePrimary title='Recycle Faqs List' />
         <SpacerTertiary />
 
 
@@ -78,23 +78,23 @@ export default function CenterListPage() {
         
                   {/* HEADER */}
                   <section className="w-full bg-gray-300 font-bold text-lg border border-gray-400 flex items-center justify-start">
-                    <div className="flex-5 border-r border-gray-400 px-2 py-1">NAME</div>
-                    <div className="flex-3 border-r border-gray-400 px-2 py-1">CITY</div>
-                    <div className="flex-4 border-r border-gray-400 px-2 py-1">PHONE</div>
+                    <div className="flex-5 border-r border-gray-400 px-2 py-1">QUESTION</div>
+                    <div className="flex-3 border-r border-gray-400 px-2 py-1">AUTHOR</div>
+                    <div className="flex-4 border-r border-gray-400 px-2 py-1">CREATED</div>
                     <div className="flex-2 px-2 border-gray-400 py-1 text-end">ACTION</div>
                   </section>
                   
                   {/* ITEMS */}
-                  {CenterData.map((i, key) => (
+                  {FaqData.map((i, key) => (
                     <section key={key} className="w-full border-x border-b border-gray-400 flex items-center justify-start">
-                      <div className="flex-5 border-r border-gray-400 px-2 py-1">{i.name}</div>
+                      <div className="flex-5 border-r border-gray-400 px-2 py-1">{i.question}</div>
                       <div className="flex-3 border-r border-gray-400 px-2 py-1">
-                        {i.city}
+                        {i.userId}
                       </div>
-                      <div className="flex-4 border-r border-gray-400 px-2 py-1">{i.phone}</div>
+                      <div className="flex-4 border-r border-gray-400 px-2 py-1">{i.createdAt}</div>
                       <div className="flex-2 px-2 border-gray-400 py-1 text-end flex items-center justify-end gap-3">
                         <button className="cursor-pointer group">
-                        <Link href={`/admin/center/${i.id}`}>
+                        <Link href={`/admin/faq/${i.id}`}>
                           <FaEye className="text-xl text-gray-800 group-hover:text-green-600 group-hover:scale-110 ease-initial transition-all duration-200" />
                         </Link>
                         </button>
@@ -117,7 +117,7 @@ export default function CenterListPage() {
         </section>
       </section>
 
-      <CenterAddModal isModal={isModal} setIsModal={setIsModal} />
+      <FaqAddModal isModal={isModal} setIsModal={setIsModal} />
     </>
   )
 }

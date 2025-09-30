@@ -25,17 +25,17 @@ const variants: Variants = {
         }},
 }
 
-interface ScheduleEditModalInterface{
+interface ScheduleAddModalInterface{
     isModal: boolean,
     setIsModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
 
-export default function ScheduleEditModal({
+export default function ScheduleAddModal({
         isModal, 
         setIsModal
-    }: ScheduleEditModalInterface
+    }: ScheduleAddModalInterface
 ) {
     const [data, setData] = useState(ScheduleEntity)
     const [isSubmit, setIsSubmit] = useState<boolean>(false)
@@ -51,7 +51,7 @@ export default function ScheduleEditModal({
         e.preventDefault();
         setIsSubmit(true)  
         try {
-            // Edit your form submission logic here
+            // Add your form submission logic here
             console.log('Form data:', data);
             
             // Simulate API call
@@ -88,7 +88,7 @@ export default function ScheduleEditModal({
 
                     <form onSubmit={handleSubmit} className='flex flex-col items-start justify-center gap-4'>
                         <div className='w-full'>
-                            <TitlePrimary title="Edit Schedule" />
+                            <TitlePrimary title="Add Schedule" />
                         </div>
                         <div className='grid grid-cols-2 w-full gap-4'>
                           <TextInputPrimary

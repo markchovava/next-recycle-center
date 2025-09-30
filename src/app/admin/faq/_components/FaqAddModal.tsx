@@ -9,10 +9,8 @@ import TextInputPrimary from '@/_components/forms/TextInputPrimary';
 import ButtonSubmit from '@/_components/buttons/ButtonSubmit';
 import TextAreaPrimary from '@/_components/forms/TextAreaPrimary';
 import SelectInputPrimary from '@/_components/forms/SelectInputPrimary';
-import { ScheduleEntity } from '@/_data/entity/ScheduleEntity';
+import { FaqEntity } from '@/_data/entity/FaqEntity';
 import { PublishData } from '@/_data/sample/PublishData';
-import { CenterData } from '@/_data/sample/CenterData';
-import SelectInputSecondary from '@/_components/forms/SelectInputSecondary';
 
 
 
@@ -25,19 +23,19 @@ const variants: Variants = {
         }},
 }
 
-interface ScheduleEditModalInterface{
+interface FaqAddModalInterface{
     isModal: boolean,
     setIsModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
 
-export default function ScheduleEditModal({
+export default function FaqAddModal({
         isModal, 
         setIsModal
-    }: ScheduleEditModalInterface
+    }: FaqAddModalInterface
 ) {
-    const [data, setData] = useState(ScheduleEntity)
+    const [data, setData] = useState(FaqEntity)
     const [isSubmit, setIsSubmit] = useState<boolean>(false)
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement> | 
@@ -51,7 +49,7 @@ export default function ScheduleEditModal({
         e.preventDefault();
         setIsSubmit(true)  
         try {
-            // Edit your form submission logic here
+            // Add your form submission logic here
             console.log('Form data:', data);
             
             // Simulate API call
@@ -88,32 +86,21 @@ export default function ScheduleEditModal({
 
                     <form onSubmit={handleSubmit} className='flex flex-col items-start justify-center gap-4'>
                         <div className='w-full'>
-                            <TitlePrimary title="Edit Schedule" />
+                            <TitlePrimary title="Add FAQ" />
                         </div>
-                        <div className='grid grid-cols-2 w-full gap-4'>
-                          <TextInputPrimary
-                              label='Date:' 
-                              name='createdAt' 
-                              type="date"
-                              value={data.createdAt} 
-                              placeholder='Enter your Date...'
-                              onChange={handleInput} 
-                          />
-                          <TextInputPrimary
-                              label='Time:' 
-                              name='time' 
-                              type="time"
-                              value={data.time} 
-                              placeholder='Enter your Time...'
-                              onChange={handleInput} 
-                          />
-                        </div>
-                        <SelectInputPrimary
-                            label='Time:' 
-                            name='center' 
+                        <TextInputPrimary
+                            label='Question:' 
+                            name='question' 
                             type="text"
-                            dbData={CenterData}
-                            value={data.center} 
+                            value={data.question} 
+                            placeholder='Enter your Title...'
+                            onChange={handleInput} 
+                        />
+                        <TextAreaPrimary
+                            label='Answer:' 
+                            name='answer' 
+                            value={data.answer} 
+                            placeholder='Enter your Details...'
                             onChange={handleInput} 
                         />
                         <div className='w-full flex items-center justify-center pt-1'>

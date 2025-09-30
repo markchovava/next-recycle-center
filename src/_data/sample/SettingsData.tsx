@@ -16,7 +16,5 @@ export const SettingsData = [
         iconType: "user", 
         css: "text-orange-600 "
     },
-   
-   
-   
+     
 ]
