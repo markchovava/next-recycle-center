@@ -11,10 +11,8 @@ export default function Home() {
   return (
    <>
    <HeaderSecondary />
-
-   <SpacerPrimary />
+   
    <HomePage />
-
 
    <SpacerPrimary />
    </>
