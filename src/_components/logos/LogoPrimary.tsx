@@ -12,7 +12,7 @@ export default function LogoPrimary() {
             width={80} 
             height={80} />
         <h1 className='leading-tight font-extrabold text-[2rem]'>
-            Recycling Center
+            Recycling Mate
         </h1>
     </Link>
     </>
