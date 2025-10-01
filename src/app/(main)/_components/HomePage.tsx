@@ -9,11 +9,13 @@ import SpacerSecondary from "@/_components/spacers/SpacerSecondary"
 import SpacerTertiary from "@/_components/spacers/SpacerTertiary"
 import TitlePrimary from "@/_components/titles/TitlePrimary"
 import { AboutData } from "@/_data/sample/AboutData"
-import { FaAngleDown } from "react-icons/fa";
+
 import Link from "next/link"
 import TabPrimary from "@/_components/tabs/TabPrimary"
 import { FaqData } from "@/_data/sample/FaqData"
 import TitleTertiary from "@/_components/titles/TitleTertiary"
+import FormContact from "@/_components/forms/FormContact"
+import { NavLinksData } from "@/_data/sample/NavLinksData"
 
 
 export default function HomePage() {
@@ -47,6 +49,7 @@ export default function HomePage() {
             </div>
         </section>
     </FadeSlideIn>
+
 
     <SpacerPrimary />
     <FadeSlideIn slideDirection="up" duration={1500}>  
@@ -84,6 +87,14 @@ export default function HomePage() {
             </div>
         </section>
     </FadeSlideIn>
+
+
+    <SpacerPrimary />
+    <FadeSlideIn slideDirection="up" duration={1500}>
+        <FormContact />
+    </FadeSlideIn>
+
+   
 
     </>
   )

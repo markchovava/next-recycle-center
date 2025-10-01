@@ -2,6 +2,7 @@ import HeaderSecondary from "@/_components/headers/HeaderSecondary";
 import SpacerPrimary from "@/_components/spacers/SpacerPrimary";
 import { FaTruckPickup, FaRecycle } from "react-icons/fa6";
 import HomePage from "./_components/HomePage";
+import Footer from "@/_components/footers/Footer";
 
 
 
@@ -14,7 +15,7 @@ export default function Home() {
    
    <HomePage />
 
-   <SpacerPrimary />
+   <Footer />
    </>
   );
 }
