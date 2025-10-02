@@ -7,6 +7,9 @@ export interface CenterInterface {
     id: number;
     userId: number;
 
+    //  IMAGE
+    img: string;
+
     // Contact Information
     name: string;
     phone: string;

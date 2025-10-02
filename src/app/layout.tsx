@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Footer from "@/_components/footers/Footer";
 
 
 
@@ -22,6 +23,8 @@ export default function RootLayout({
       <body
         className={`antialiased`}>
         {children}
+
+         <Footer />
 
         <ToastContainer
           position="top-right"

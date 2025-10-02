@@ -11,6 +11,7 @@ import { FaDeleteLeft, FaEye } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
 import { IoSearch } from "react-icons/io5";
 import CenterAddModal from "./CenterAddModal";
+import PaginationPrimary from "@/_components/pagination/PaginationPrimary";
 
 
 
@@ -110,11 +111,8 @@ export default function CenterListPage() {
 
 
         <SpacerTertiary />
-        <section className="w-full flex items-center justify-end gap-3 mt-4">
-          <p className="font-light italic">Showing 1 to 5 of 5 entries</p>
-          <ButtonPaginate direction="left"  />
-          <ButtonPaginate direction="right"  />
-        </section>
+        <PaginationPrimary />
+        
       </section>
 
       <CenterAddModal isModal={isModal} setIsModal={setIsModal} />

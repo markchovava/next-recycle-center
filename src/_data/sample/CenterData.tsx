@@ -6,6 +6,9 @@ export const CenterData: CenterInterface[] = [
         id: 101,
         userId: 501,
 
+        //  IMAGE
+        img: "/assets/img/no_photo.jpg",
+
         // Contact Information
         name: "QuickLube Auto Service",
         phone: "555-0101",
@@ -38,6 +41,9 @@ export const CenterData: CenterInterface[] = [
         // Identifiers
         id: 102,
         userId: 502,
+
+        //  IMAGE
+        img: "/assets/img/no_photo.jpg",
 
         // Contact Information
         name: "Innovate Tech Hub",
@@ -72,6 +78,9 @@ export const CenterData: CenterInterface[] = [
         id: 103,
         userId: 503,
 
+        //  IMAGE
+        img: "/assets/img/no_photo.jpg",
+
         // Contact Information
         name: "The Green Pharmacy",
         phone: "555-0303",
@@ -104,6 +113,9 @@ export const CenterData: CenterInterface[] = [
         // Identifiers
         id: 104,
         userId: 504,
+
+        //  IMAGE
+        img: "/assets/img/no_photo.jpg",
 
         // Contact Information
         name: "Central Library Annex",
@@ -138,6 +150,9 @@ export const CenterData: CenterInterface[] = [
         id: 105,
         userId: 505,
 
+        //  IMAGE
+        img: "/assets/img/no_photo.jpg",
+
         // Contact Information
         name: "The Local Barber Shop",
         phone: "555-0505",
@@ -170,6 +185,9 @@ export const CenterData: CenterInterface[] = [
         // Identifiers
         id: 106,
         userId: 506,
+
+        //  IMAGE
+        img: "/assets/img/no_photo.jpg",
 
         // Contact Information
         name: "Ocean View Wellness Spa",
@@ -204,6 +222,9 @@ export const CenterData: CenterInterface[] = [
         id: 107,
         userId: 507,
 
+        //  IMAGE
+        img: "/assets/img/no_photo.jpg",
+
         // Contact Information
         name: "Passport Renewal Office (West)",
         phone: "555-0707",
@@ -236,6 +257,9 @@ export const CenterData: CenterInterface[] = [
         // Identifiers
         id: 108,
         userId: 508,
+
+        //  IMAGE
+        img: "/assets/img/no_photo.jpg",
 
         // Contact Information
         name: "Elite Fitness Gym",
@@ -270,6 +294,9 @@ export const CenterData: CenterInterface[] = [
         id: 109,
         userId: 509,
 
+        //  IMAGE
+        img: "/assets/img/no_photo.jpg",
+
         // Contact Information
         name: "Vintage Camera Repair",
         phone: "555-0909",
@@ -302,6 +329,9 @@ export const CenterData: CenterInterface[] = [
         // Identifiers
         id: 110,
         userId: 510,
+
+        //  IMAGE
+        img: "/assets/img/no_photo.jpg",
 
         // Contact Information
         name: "Sunshine Daycare & Kindergarten",

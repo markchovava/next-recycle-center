@@ -9,6 +9,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Link from 'next/link';
+import { CenterData } from '@/_data/sample/CenterData';
+import CardCenter from '../cards/CardCenter';
 
 
 export default function CarouselPrimary() {
@@ -64,21 +66,9 @@ export default function CarouselPrimary() {
         className="mb-6"
       >
         {/* slides */}
-        {[...Array(12)].map((_, key) => (
+        {CenterData.map((i, key) => (
           <SwiperSlide key={key} className='p-2'>
-
-            <div className='h-[20rem] group bg-white text-black text-2xl rounded-lg overflow-hidden'>
-              <div className='aspect-[5/4] bg-gray-300 w-full'></div>
-              <div className='px-3 py-3 flex flex-col'>
-                <Link href="">
-                  <h3 className='cursor-pointer ease-initial transition-all duration-300 group-hover:underline'>
-                    The ECnter it Annnxn
-                  </h3>
-                </Link>
-                <p className='text-lg'> Item {key + 1}</p>  
-              </div>
-    
-            </div>
+            <CardCenter dbData={i} />
           </SwiperSlide>
         ))}
       </Swiper>

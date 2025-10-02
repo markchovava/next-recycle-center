@@ -2,7 +2,6 @@
 import Link from "next/link";
 import LogoPrimary from "../logos/LogoPrimary";
 import { NavLinksData } from "@/_data/sample/NavLinksData";
-import ButtonPrimary from "../buttons/ButtonPrimary";
 import ButtonSecondary from "../buttons/ButtonSecondary";
 
 
@@ -10,7 +9,7 @@ import ButtonSecondary from "../buttons/ButtonSecondary";
 export default function NavPrimary() {
   return (
     <nav className='flex justify-between items-center gap-4 pr-[4%]'>
-        <div className='bg-white text-green-800 p-2'>
+        <div className='bg-white text-green-800 py-3 pl-3 pr-4'>
             <LogoPrimary />
         </div>
         <ul className='text-white text-xl flex items-center justify-start gap-4'>
