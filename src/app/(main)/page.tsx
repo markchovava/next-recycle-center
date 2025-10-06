@@ -1,11 +1,13 @@
 import HeaderSecondary from "@/_components/headers/HeaderSecondary";
-import SpacerPrimary from "@/_components/spacers/SpacerPrimary";
-import { FaTruckPickup, FaRecycle } from "react-icons/fa6";
 import HomePage from "./_components/HomePage";
-import Footer from "@/_components/footers/Footer";
+import { Metadata } from "next";
+import { AppInfoData } from "@/_data/sample/AppInfoData";
 
 
-
+export const metadata: Metadata = {
+  title: `${AppInfoData.name} - Home`,
+  description: "The RecycleMate app",
+};
 
 
 export default function Home() {

@@ -6,4 +6,5 @@ export interface NewsInterface {
     priority: number;
     createdAt: string;
     updatedAt: string;
+    img: string
 }

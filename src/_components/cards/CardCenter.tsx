@@ -18,7 +18,7 @@ export default function CardCenter({dbData}: {dbData: CardCenterInterface}) {
 
 
   return (
-    <div className='h-[21rem] group bg-white text-black text-2xl rounded-lg overflow-hidden pb-4'>
+    <div className='lg:h-[21rem] h-auto group bg-white text-black text-2xl rounded-lg overflow-hidden pb-4'>
         <div className='aspect-[5/4] bg-gray-300 w-full border-b border-gray-300 relative overflow-hidden'>
             <Image 
                 src={img} 

@@ -1,8 +1,5 @@
-import { NewsInterface } from "../interface/NewsInterface";
 
-
-
-export const NewsData: NewsInterface[] = [
+export const NewsData = [
     {
         id: 1,
         title: "Local Market Sees Record High in Q3",
@@ -11,6 +8,7 @@ export const NewsData: NewsInterface[] = [
         priority: 1,
         createdAt: "2025-09-27T10:00:00Z",
         updatedAt: "2025-09-28T12:30:00Z",
+        img:"/assets/img/no_photo.jpg",
     },
     {
         id: 2,
@@ -20,6 +18,7 @@ export const NewsData: NewsInterface[] = [
         priority: 2,
         createdAt: "2025-09-26T15:45:00Z",
         updatedAt: "2025-09-27T09:15:00Z",
+        img: "/assets/img/no_photo.jpg",
     },
     {
         id: 3,
@@ -29,6 +28,7 @@ export const NewsData: NewsInterface[] = [
         priority: 1,
         createdAt: "2025-09-25T08:20:00Z",
         updatedAt: "2025-09-26T11:05:00Z",
+        img: "/assets/img/no_photo.jpg",
     },
     {
         id: 4,
@@ -38,6 +38,7 @@ export const NewsData: NewsInterface[] = [
         priority: 3,
         createdAt: "2025-09-24T20:10:00Z",
         updatedAt: "2025-09-25T14:40:00Z",
+        img: "/assets/img/no_photo.jpg",
     },
     {
         id: 5,
@@ -47,6 +48,7 @@ export const NewsData: NewsInterface[] = [
         priority: 2,
         createdAt: "2025-09-23T11:55:00Z",
         updatedAt: "2025-09-24T07:00:00Z",
+        img: "/assets/img/no_photo.jpg",
     },
     {
         id: 6,
@@ -56,6 +58,7 @@ export const NewsData: NewsInterface[] = [
         priority: 4,
         createdAt: "2025-09-22T14:35:00Z",
         updatedAt: "2025-09-23T10:20:00Z",
+        img: "/assets/img/no_photo.jpg",
     },
     {
         id: 7,
@@ -65,6 +68,7 @@ export const NewsData: NewsInterface[] = [
         priority: 1,
         createdAt: "2025-09-21T19:00:00Z",
         updatedAt: "2025-09-22T08:50:00Z",
+        img: "/assets/img/no_photo.jpg",
     },
     {
         id: 8,
@@ -74,6 +78,7 @@ export const NewsData: NewsInterface[] = [
         priority: 3,
         createdAt: "2025-09-20T09:12:00Z",
         updatedAt: "2025-09-21T13:10:00Z",
+        img: "/assets/img/no_photo.jpg",
     },
     {
         id: 9,
@@ -83,6 +88,7 @@ export const NewsData: NewsInterface[] = [
         priority: 5,
         createdAt: "2025-09-19T16:25:00Z",
         updatedAt: "2025-09-20T11:45:00Z",
+        img: "/assets/img/no_photo.jpg",
     },
     {
         id: 10,
@@ -92,5 +98,6 @@ export const NewsData: NewsInterface[] = [
         priority: 2,
         createdAt: "2025-09-18T22:30:00Z",
         updatedAt: "2025-09-19T06:00:00Z",
+        img: "/assets/img/no_photo.jpg",
     },
 ];

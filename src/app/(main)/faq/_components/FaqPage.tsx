@@ -61,12 +61,6 @@ export default function FaqPage() {
         </div>
 
         <SpacerSecondary />
-
-        <div className="lg:w-[85%] w-[92%] mx-auto">
-
-        </div>
-
-         <SpacerPrimary />
         <FadeSlideIn slideDirection="up" duration={1500}>
             <section className="w-full">
                 <div className="lg:w-[85%] w-[92%] mx-auto">
@@ -80,14 +74,14 @@ export default function FaqPage() {
                         key < 8 &&
                         <TabPrimary key={key} dbData={i} />
                     ))}
-                    
+
+                    <SpacerTertiary />
+                    <PaginationPrimary />
                 </div>
             </section>
         </FadeSlideIn>
 
-        <SpacerSecondary />
-        <PaginationPrimary />
-        
+           
         <SpacerPrimary />
 
     </>

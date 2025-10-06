@@ -1,21 +1,22 @@
 import HeaderTertiary from '@/_components/headers/HeaderTertiary'
 import React from 'react'
-import CenterPage from './_components/CenterPage'
+import ContactPage from './_components/ContactPage'
 import { Metadata } from 'next';
 import { AppInfoData } from '@/_data/sample/AppInfoData';
 
 
 export const metadata: Metadata = {
-  title: `${AppInfoData.name} - Centers`,
+  title: `${AppInfoData.name} - Contact Us`,
   description: "The RecycleMate app.",
 };
+
 
 
 export default function page() {
   return (
     <>
-    <HeaderTertiary title='Recycle Centers' />
-    <CenterPage />
+    <HeaderTertiary title='Contact Us' />
+    <ContactPage />
     </>
   )
 }

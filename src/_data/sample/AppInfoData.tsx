@@ -1,7 +1,7 @@
 export const AppInfoData = {
     id: 1,
     name: "Recycle Mate",
-    phone: "+1 (555) 987-6543",
+    phone: "",
     email: "The Data is written here.",
     address: "The Data is written here.",
     description: "The description of the app goes here.",
