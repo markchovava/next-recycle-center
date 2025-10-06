@@ -5,7 +5,7 @@ import React from 'react'
 export default function Footer() {
   return (
      <footer className="bg-green-900 py-6 text-gray-300">
-        <div className="w-[92%] mx-auto flex items-center justify-between">
+        <div className="w-[92%] mx-auto flex lg:flex-row flex-col items-center justify-between gap-3">
             <ul className="flex items-center justify-start gap-3">
                 {NavLinksData.map((i, key) => (
                     <React.Fragment key={key}>
@@ -19,7 +19,9 @@ export default function Footer() {
                 ))}
             </ul>
 
-            <p className="">&copy; RecycleMate {new Date().getFullYear()}</p>
+            <p className="">
+                &copy; RecycleMate {new Date().getFullYear()}
+            </p>
         </div>
     </footer>
   )

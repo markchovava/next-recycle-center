@@ -14,7 +14,7 @@ export default function AdminPage() {
         </div>
 
         <SpacerTertiary />
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-6">
             {DashboardData.map((i, key) => (
                 <CardPrimary key={key} dbData={i} />
             ))}

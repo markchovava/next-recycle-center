@@ -2,6 +2,14 @@
 import FormRegister from "@/_components/forms/FormRegister";
 import HeaderPrimary from "@/_components/headers/HeaderPrimary";
 import SpacerPrimary from "@/_components/spacers/SpacerPrimary";
+import { AppInfoData } from "@/_data/sample/AppInfoData";
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  title: `${AppInfoData.name} - Register`,
+  description: "The RecycleMate app",
+};
 
 
 export default function page() {

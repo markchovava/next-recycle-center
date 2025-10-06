@@ -7,6 +7,7 @@ import SpacerSecondary from "@/_components/spacers/SpacerSecondary"
 import ProfileViewPage from "./_components/ProfileViewPage"
 
 
+
 const BreadCrumbsData = [
     {id: 1, name: "Home", href:"/"},
     {id: 2, name: "Dashboard", href:"/admin"},
@@ -16,6 +17,7 @@ const BreadCrumbsData = [
 
 
 export default function Page() {
+
   return (
     <>
         <HeaderPrimary />
