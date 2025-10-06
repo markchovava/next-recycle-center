@@ -13,7 +13,7 @@ export default function HeaderSecondary() {
         
         <div className='absolute z-15 top-0 left-0 w-full h-[100%] flex flex-col'>
             <NavPrimary />
-            <div className='flex-1 w-full grid grid-cols-2'>
+            <div className='hidden flex-1 w-full lg:grid grid-cols-2'>
                 <div className='col-span-1 flex items-center justify-start pl-[8%]'>
                     <p className='text-[2.5rem] font-extrabold text-white leading-tight'>
                         {AboutData.intro}

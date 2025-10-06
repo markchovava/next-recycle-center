@@ -31,7 +31,7 @@ export default function SelectInputPrimary({
             className='w-full px-3 py-2 rounded-lg outline-none border border-gray-300 focus:border-gray-500 ease-initial duration-200 transition-all'>
                 <option value="" disabled>Select an option</option>
                 {dbData.map((i, key) => (
-                    <option key={key} value={i.value ? i.value : i.name}>
+                    <option key={key} value={i.value}>
                       {i.label ? i.label : i.name}
                     </option>
                 ))}

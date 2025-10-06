@@ -11,6 +11,7 @@ import { FaUsers } from "react-icons/fa";
 import { BsInfoCircle } from "react-icons/bs";
 import { FaQuoteLeft } from "react-icons/fa";
 import { RiContactsLine } from "react-icons/ri";
+import { IoHelpBuoyOutline } from "react-icons/io5";
 import Link from "next/link";
 
 interface CardPrimaryProps{
@@ -32,6 +33,8 @@ export default function CardPrimary({dbData}: { dbData: CardPrimaryProps }) {
             <FaUsers className="text-[3.5rem]" /> : 
         iconType === "recycling" ?
             <MdRecycling className="text-[3.5rem]" /> : 
+        iconType === "how-to" ?
+            <IoHelpBuoyOutline className="text-[3.5rem]" /> : 
         iconType === "user" ?
             <FaRegUser className="text-[3.5rem]" /> : 
         iconType === "faq" ?

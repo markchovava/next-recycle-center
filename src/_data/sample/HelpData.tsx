@@ -8,6 +8,14 @@ export const HelpData = [
         css: "text-cyan-600"
     },
     {
+        id: 3, 
+        title: "Getting Started", 
+        href: "/admin/message",
+        desc: "Send, receive, and manage communications with other users or support.", 
+        iconType: "how-to", 
+        css: "text-zinc-600"
+    },
+    {
         id: 2, 
         title: "Messages", 
         href: "/admin/message",
@@ -15,5 +23,5 @@ export const HelpData = [
         iconType: "contact", 
         css: "text-blue-600"
     },
-      
+    
 ]
