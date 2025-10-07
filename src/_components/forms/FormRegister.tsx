@@ -8,8 +8,11 @@ import Heading2 from "../headings/Heading2"
 import { AuthEntity } from "@/_data/entity/AuthEntity"
 import { registerAction } from "@/_actions/AuthActions"
 import { useRouter } from "next/navigation"
+<<<<<<< HEAD
 import SelectInputPrimary from "./SelectInputPrimary"
 import { RolesData } from "@/_data/sample/RolesData"
+=======
+>>>>>>> 6395e4f952a333e69b8b1a2550606a00ed21b7bf
 
 
 
@@ -18,6 +21,7 @@ export default function FormRegister() {
     const [data, setData] = useState(AuthEntity)
     const [errMsg, setErrMsg] = useState(AuthEntity)
     
+<<<<<<< HEAD
     const handleInput = (e: React.ChangeEvent<HTMLInputElement> | 
         React.ChangeEvent<HTMLTextAreaElement> |
         React.ChangeEvent<HTMLSelectElement>
@@ -42,6 +46,18 @@ export default function FormRegister() {
         }
     }
 
+=======
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+        setData({ ...data, [e.target.name]: e.target.value })
+        // Clear error for the field being edited
+        if (errMsg[e.target.name as keyof typeof errMsg]) {
+            setErrMsg({ ...errMsg, [e.target.name]: "" })
+        }
+    }
+
+
+
+>>>>>>> 6395e4f952a333e69b8b1a2550606a00ed21b7bf
     function validateEmail(email: string): boolean {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         return emailRegex.test(email)
@@ -49,10 +65,15 @@ export default function FormRegister() {
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
+<<<<<<< HEAD
         console.log('data', data)
         let errors = { ...AuthEntity }
         let hasError = false
         
+=======
+        let errors = { ...AuthEntity }
+        let hasError = false
+>>>>>>> 6395e4f952a333e69b8b1a2550606a00ed21b7bf
         // Email validation
         if (!data.email) {
             errors.email = "Email is required."
@@ -61,6 +82,7 @@ export default function FormRegister() {
             errors.email = "Please enter a valid email address."
             hasError = true
         }
+<<<<<<< HEAD
         
         // Role validation - check if a valid role was selected (roleLevel > 0)
         if (data.roleLevel === 0) {
@@ -68,11 +90,17 @@ export default function FormRegister() {
             hasError = true
         }
         
+=======
+>>>>>>> 6395e4f952a333e69b8b1a2550606a00ed21b7bf
         // Password validation
         if (!data.password) {
             errors.password = "Password is required."
             hasError = true
+<<<<<<< HEAD
         }   
+=======
+        }
+>>>>>>> 6395e4f952a333e69b8b1a2550606a00ed21b7bf
         // Confirm password validation
         if (!data.passwordConfirm) {
             errors.passwordConfirm = "Confirm Password is required."
@@ -81,36 +109,61 @@ export default function FormRegister() {
             errors.passwordConfirm = "Passwords do not match."
             hasError = true
         }
+<<<<<<< HEAD
         
+=======
+>>>>>>> 6395e4f952a333e69b8b1a2550606a00ed21b7bf
         // If there are errors, display them and stop submission
         if (hasError) {
             setErrMsg(errors)
             // Show the first error as toast
+<<<<<<< HEAD
             const firstError = errors.email || errors.role || 
                         errors.password || errors.passwordConfirm
             toast.warn(firstError)
             return
         }
         
+=======
+            const firstError = errors.email || errors.password || errors.passwordConfirm
+            toast.warn(firstError)
+            return
+        }
+>>>>>>> 6395e4f952a333e69b8b1a2550606a00ed21b7bf
         // Proceed with form submission
         setData({ ...data, isSubmit: true })
         const formData = {
             email: data.email,
+<<<<<<< HEAD
             roleLevel: data.roleLevel,
             password: data.password
         }
         
+=======
+            password: data.password
+        }
+>>>>>>> 6395e4f952a333e69b8b1a2550606a00ed21b7bf
         try {
             // API call
             const res = await registerAction(formData)
             if(res.status === 0) {
                 toast.warn(res.message)
+<<<<<<< HEAD
                 setErrMsg({...errMsg, email: res.message})   
+=======
+                setErrMsg({...errMsg, email: res.message})
+            
+>>>>>>> 6395e4f952a333e69b8b1a2550606a00ed21b7bf
             }
             if(res.status === 1) {
                 toast.success(res.message)
                 router.push('/login')
             }
+<<<<<<< HEAD
+=======
+            // await new Promise(resolve => setTimeout(resolve, 1000))
+            // toast.success('Registration successful!')
+>>>>>>> 6395e4f952a333e69b8b1a2550606a00ed21b7bf
         } catch (error) {
             toast.error('Registration failed. Please try again.')
             console.error('Form submission error:', error)
@@ -140,6 +193,7 @@ export default function FormRegister() {
                     }
                 </div>
                 <div>
+<<<<<<< HEAD
                     <SelectInputPrimary
                         label="Role:"
                         name="roleLevel"
@@ -152,6 +206,8 @@ export default function FormRegister() {
                     }
                 </div>
                 <div>
+=======
+>>>>>>> 6395e4f952a333e69b8b1a2550606a00ed21b7bf
                     <TextInputPrimary
                         label="Password:"
                         name="password"
