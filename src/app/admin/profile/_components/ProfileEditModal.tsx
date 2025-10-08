@@ -9,6 +9,7 @@ import SpacerTertiary from '@/_components/spacers/SpacerTertiary';
 import TitlePrimary from '@/_components/titles/TitlePrimary';
 import TextInputPrimary from '@/_components/forms/TextInputPrimary';
 import ButtonSubmit from '@/_components/buttons/ButtonSubmit';
+import { AuthEntity } from '@/_data/entity/AuthEntity';
 
 
 
@@ -23,32 +24,21 @@ const variants: Variants = {
 
 interface ProfileEditModalInterface{
     isModal: boolean,
-    setIsModal: React.Dispatch<React.SetStateAction<boolean>>
+    setIsModal: React.Dispatch<React.SetStateAction<boolean>>,
+    domData: any
 }
 
 
-interface InputInterface{
-    name: string,
-    email: string,
-    address: string,
-    phone: string,
-    password?: string,
-}
 
-const InputData = {
-    name: "",
-    email: "",
-    address: "",
-    phone: "",
-    password: "",
-}
+
 
 export default function ProfileEditModal({
         isModal, 
-        setIsModal
+        setIsModal,
+        domData
     }: ProfileEditModalInterface
 ) {
-    const [data, setData] = useState<InputInterface>(InputData)
+    const [data, setData] = useState(domData)
     const [isSubmit, setIsSubmit] = useState<boolean>(false)
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {

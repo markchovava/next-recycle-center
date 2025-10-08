@@ -6,6 +6,7 @@ import TitlePrimary from "@/_components/titles/TitlePrimary";
 import { useState, useEffect } from "react";
 import ProfileEditModal from "./ProfileEditModal";
 import { getTheCookie } from "@/_cookies/CookiesClient";
+import LoaderPrimary from "@/_components/loaders/LoaderPrimary";
 
 export default function ProfileViewPage() {
   const [data, setData] = useState<any>(null);
@@ -31,9 +32,7 @@ export default function ProfileViewPage() {
       <section className="w-[92%] mx-auto">
         <TitlePrimary title='View Profile' />
         <SpacerTertiary />
-        <div className="bg-white drop-shadow p-6 rounded-xl">
-          <p>Loading profile...</p>
-        </div>
+        <LoaderPrimary />
       </section>
     );
   }
@@ -58,7 +57,7 @@ export default function ProfileViewPage() {
         </div>
       </section>
 
-      <ProfileEditModal isModal={isModal} setIsModal={setIsModal} />
+      <ProfileEditModal isModal={isModal} setIsModal={setIsModal} domData={data} />
     </>
   );
 }

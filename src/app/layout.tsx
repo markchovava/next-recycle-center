@@ -20,11 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-<<<<<<< HEAD
         className={`antialiased min-h-[100vh]`}>
-=======
-        className={`antialiased min-h-full`}>
->>>>>>> 6395e4f952a333e69b8b1a2550606a00ed21b7bf
         {children}
 
          <Footer />
