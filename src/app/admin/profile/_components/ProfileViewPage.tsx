@@ -7,27 +7,23 @@ import { useState, useEffect } from "react";
 import ProfileEditModal from "./ProfileEditModal";
 import { getTheCookie } from "@/_cookies/CookiesClient";
 import LoaderPrimary from "@/_components/loaders/LoaderPrimary";
+import { RolesData } from "@/_data/sample/RolesData";
+import { useAuthStore } from "@/_store/useAuthStore";
+
+
+
 
 export default function ProfileViewPage() {
-  const [data, setData] = useState<any>(null);
+  const { data, preData, setData, fetchAuthCookie, isLoading } = useAuthStore()
+  const [role, setRole] = useState("");
   const [isModal, setIsModal] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchCookieData = async () => {
-      try {
-        const theCookieData = await getTheCookie("RECYCLEMATE_CURRENT_USER_COOKIE");
-        if (theCookieData) {
-          setData(JSON.parse(theCookieData));
-        }
-      } catch (error) {
-        console.error("Failed to fetch or parse cookie data:", error);
-      }
-    };
-
-    fetchCookieData();
+    fetchAuthCookie();
   }, []);
 
-  if (!data) {
+
+  if (isLoading) {
     return (
       <section className="w-[92%] mx-auto">
         <TitlePrimary title='View Profile' />
@@ -36,6 +32,7 @@ export default function ProfileViewPage() {
       </section>
     );
   }
+
 
   return (
     <>
@@ -47,17 +44,18 @@ export default function ProfileViewPage() {
         </div>
         <SpacerTertiary />
         <div className="bg-white drop-shadow p-6 flex flex-col items-start justify-center gap-4 rounded-xl">
-          <RecordPrimary label="Name:" value={data.name ?? "Not Added"} />
-          <RecordPrimary label="Phone:" value={data.phone ?? "Not Added"} />
-          <RecordPrimary label="Email:" value={data.email ?? "Not Added"} />
-          <RecordPrimary label="Address:" value={data.address ?? "Not Added"} />
-          <RecordPrimary label="Code:" value={data.code} />
-          <RecordPrimary label="Code:" value={data.roleLevel} />
+          
+          <RecordPrimary label="Name:" value={preData.name ?? "Not Added"} />
+          <RecordPrimary label="Phone:" value={preData.phone ?? "Not Added"} />
+          <RecordPrimary label="Email:" value={preData.email ?? "Not Added"} />
+          <RecordPrimary label="Address:" value={preData.address ?? "Not Added"} />
+          <RecordPrimary label="Code:" value={preData.code} />
+          <RecordPrimary label="Role:" value={preData.role || "Not Added"} />
           <RecordPrimary label="Admin:" value={data.isAdmin === 1 ? "Yes" : "No"} />
         </div>
       </section>
 
-      <ProfileEditModal isModal={isModal} setIsModal={setIsModal} domData={data} />
+      <ProfileEditModal isModal={isModal} setIsModal={setIsModal} />
     </>
   );
 }

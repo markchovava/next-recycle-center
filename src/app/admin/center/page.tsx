@@ -3,6 +3,7 @@ import HeaderPrimary from "@/_components/headers/HeaderPrimary"
 import SpacerPrimary from "@/_components/spacers/SpacerPrimary"
 import CenterListPage from "./_components/CenterListPage"
 import SpacerSecondary from "@/_components/spacers/SpacerSecondary"
+import { centerListAction } from "@/_actions/CenterActions"
 
 const BreadCrumbsData = [
     {id: 1, name: "Home", href:"/"},
@@ -10,14 +11,17 @@ const BreadCrumbsData = [
     {id: 3, name: "Centers", href:"/admin/center"},
 ]
 
-export default function page() {
+export default async function page() {
+  const [ centerData ] = await Promise.all([centerListAction()]);
+
+  
   return (
     <>
     <HeaderPrimary />
     <BreadCrumbs dbData={BreadCrumbsData} />
 
     <SpacerSecondary />
-    <CenterListPage />
+    <CenterListPage dbData={centerData} />
     
     <SpacerPrimary /> 
     </>

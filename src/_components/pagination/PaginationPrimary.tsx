@@ -1,13 +1,35 @@
 "Use client"
+import { MetaInterface, MetaLinksInterface } from '@/_data/entity/ResponseEntity'
 import ButtonPaginate from '../buttons/ButtonPaginate'
 
 
-export default function PaginationPrimary() {
+interface PaginationPrimaryInterface{
+    links: MetaLinksInterface, 
+    meta: MetaInterface,
+    handlePaginate: (url: string) => void
+}
+
+
+export default function PaginationPrimary({
+      links, 
+      meta, 
+      handlePaginate
+  }: PaginationPrimaryInterface
+) {
+    const { prev, next } = links
+    const {per_page, total} = meta
+
+   
   return (
     <section className="w-full flex items-center justify-end gap-3 mt-4">
-        <p className="font-light italic">Showing 1 to 5 of 5 entries</p>
-        <ButtonPaginate direction="left"  />
-        <ButtonPaginate direction="right"  />
+        {prev ?
+          <ButtonPaginate direction="left" onClick={() => handlePaginate(prev)}  />
+          : ""
+        }
+        {next ?
+          <ButtonPaginate direction="right" onClick={() => handlePaginate(next)}  />
+          : ""
+        }
     </section>
   )
 }

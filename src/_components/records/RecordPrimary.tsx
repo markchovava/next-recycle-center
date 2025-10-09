@@ -4,7 +4,7 @@ import { JSX } from "react"
 
 interface RecordPrimaryProps{
     label: string,
-    value: string | JSX.Element
+    value: string | JSX.Element | number
 }
 
 export default function RecordPrimary({label, value}: RecordPrimaryProps) {

@@ -5,10 +5,12 @@ import SpacerPrimary from "@/_components/spacers/SpacerPrimary"
 import SpacerSecondary from "@/_components/spacers/SpacerSecondary"
 import CenterViewPage from "./_components/CenterViewPage"
 import { PageByIdInterface } from "@/_data/interface/PageByIdInterface"
+import { centerViewAction } from "@/_actions/CenterActions"
 
 
 
-export default function page({params: {id}}: PageByIdInterface) {
+export default async function page({params: {id}}: PageByIdInterface) {
+    const [ centerData ] = await Promise.all([centerViewAction(id)]);
 
     const BreadCrumbsData = [
         {id: 1, name: "Home", href:"/"},
@@ -23,7 +25,7 @@ export default function page({params: {id}}: PageByIdInterface) {
     <BreadCrumbs dbData={BreadCrumbsData} />
 
     <SpacerSecondary />
-    <CenterViewPage id={id} />
+    <CenterViewPage id={id} dbData={centerData.data ?? null} />
     
     <SpacerPrimary /> 
     </>

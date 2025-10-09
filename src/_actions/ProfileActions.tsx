@@ -11,7 +11,7 @@ import { redirect } from "next/navigation";
 
 export async function _profileStoreAction(data: any) {
     const cookieStore = await cookies();
-    const authToken = await cookieStore.get('NETWORK_RESILIENCE_AUTH_COOKIE');
+    const authToken = await cookieStore.get('RECYCLEMATE_AUTH_TOKEN_COOKIE');
     if(!authToken?.value){ redirect('/login'); }
     const res = await fetch(`${BaseURL}api/profile`, {
       'method': 'POST',
@@ -23,6 +23,5 @@ export async function _profileStoreAction(data: any) {
       }
     });
     revalidatePath('/admin/profile');
-    revalidatePath('/admin/user');
     return await res.json();
 }

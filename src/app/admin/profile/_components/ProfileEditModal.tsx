@@ -1,15 +1,14 @@
 "use client"
 
-import React, { useState } from 'react'
 import { IoClose } from 'react-icons/io5';
 import { toast } from 'react-toastify';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
-import Heading2 from '@/_components/headings/Heading2';
-import SpacerTertiary from '@/_components/spacers/SpacerTertiary';
 import TitlePrimary from '@/_components/titles/TitlePrimary';
 import TextInputPrimary from '@/_components/forms/TextInputPrimary';
 import ButtonSubmit from '@/_components/buttons/ButtonSubmit';
-import { AuthEntity } from '@/_data/entity/AuthEntity';
+import { _profileStoreAction } from '@/_actions/ProfileActions';
+import { useAuthStore } from '@/_store/useAuthStore';
+import { setTheCookie, UserCookieName } from '@/_cookies/CookiesClient';
 
 
 
@@ -25,7 +24,6 @@ const variants: Variants = {
 interface ProfileEditModalInterface{
     isModal: boolean,
     setIsModal: React.Dispatch<React.SetStateAction<boolean>>,
-    domData: any
 }
 
 
@@ -34,36 +32,62 @@ interface ProfileEditModalInterface{
 
 export default function ProfileEditModal({
         isModal, 
-        setIsModal,
-        domData
+        setIsModal, 
     }: ProfileEditModalInterface
 ) {
-    const [data, setData] = useState(domData)
-    const [isSubmit, setIsSubmit] = useState<boolean>(false)
+    const { 
+        data, 
+        errors, 
+        setInputValue, 
+        validateForm, 
+        clearErrors, 
+        setError, 
+        setIsSubmit,
+        setData
+    } = useAuthStore()
 
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
-        setData({ ...data, [e.target.name]: e.target.value })
-    }
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-            e.preventDefault();
-            setIsSubmit(true)
-            
-            try {
-                // Add your form submission logic here
-                console.log('Form data:', data);
-                
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                toast.success('Profile updated successfully!');
-                setIsModal(false);
-            } catch (error) {
-                toast.error('Failed to update profile. Please try again.');
-                console.error('Form submission error:', error);
-            } finally {
-                setIsSubmit(false);
+        e.preventDefault();
+        // Clear previous errors
+        clearErrors();
+        // Validate form using store
+        const validation = validateForm();
+        if (!validation.isValid) {
+            // Show the first error as toast
+            const firstError = validation.errors.name || 
+                validation.errors.email || validation.errors.phone || 
+                validation.errors.address;
+            toast.warn(firstError);
+            return;
+        }
+        setIsSubmit(true);
+        const formData = {
+            name: data.name,
+            phone: data.phone,
+            email: data.email,
+            address: data.address,
+        }
+        try {
+            const res = await _profileStoreAction(formData);
+            if(res.status === 0){
+                setError('email', res.message);
+                toast.warn(res.message);
+                return;
             }
+            if(res.status === 1){
+                toast.success(res.message);
+                setData(res.data)
+                setTheCookie(UserCookieName, res.data)
+                clearErrors();
+                setIsModal(false);
+            }
+        } catch (error) {
+            toast.error('Failed to update data. Please try again.');
+            console.error('Form submission error:', error);
+        } finally {
+            setIsSubmit(false);
+        }
     }
     
     return (
@@ -89,43 +113,79 @@ export default function ProfileEditModal({
                         <div className='w-full'>
                             <TitlePrimary title="Edit Profile" />
                         </div>
-                        <TextInputPrimary
-                            label='Name:' 
-                            name='name' 
-                            type="text"
-                            value={data.name} 
-                            placeholder='Enter your Name...'
-                            onChange={handleInput} 
-                        />
+
+                        <div className='w-full'>
+                            <TextInputPrimary
+                                label='Name:' 
+                                name='name' 
+                                type="text"
+                                value={data.name} 
+                                placeholder='Enter your Name...'
+                                onChange={setInputValue} 
+                            />
+                            {errors.name &&
+                                <p className="text-sm text-red-600">{errors.name}</p>
+                            }
+                        </div>
                        
-                        <TextInputPrimary
-                            label='Email:' 
-                            name='email' 
-                            type="email"
-                            value={data.email} 
-                            placeholder='Enter your Email...'
-                            onChange={handleInput} 
-                        />
-                        <TextInputPrimary
-                            label='Phone Number:' 
-                            name='phone' 
-                            type="text"
-                            value={data.phone} 
-                            placeholder='Enter your Phone Number...'
-                            onChange={handleInput} 
-                        />
-                        <TextInputPrimary
-                            label='Address:' 
-                            name='address' 
-                            type="text"
-                            value={data.address} 
-                            placeholder='Enter your Address...'
-                            onChange={handleInput} 
-                        />
+                        <div className='w-full'>
+                            <TextInputPrimary
+                                label='Email:' 
+                                name='email' 
+                                type="email"
+                                value={data.email} 
+                                placeholder='Enter your Email...'
+                                onChange={setInputValue} 
+                            />
+                            {errors.email &&
+                                <p className="text-sm text-red-600">{errors.email}</p>
+                            }
+                        </div>
+
+                       {/*  <div className='w-full'>
+                            <SelectInputPrimary
+                                label="Role:"
+                                name="roleLevel"
+                                dbData={RolesData}
+                                value={data.roleLevel}
+                                onChange={setInputValue}
+                            />
+                            {errors.role &&
+                                <p className="text-sm text-red-600">{errors.role}</p>
+                            }
+                        </div> */}
+
+                        <div className='w-full'>
+                            <TextInputPrimary
+                                label='Phone Number:' 
+                                name='phone' 
+                                type="text"
+                                value={data.phone} 
+                                placeholder='Enter your Phone Number...'
+                                onChange={setInputValue} 
+                            />
+                            {errors.phone &&
+                                <p className="text-sm text-red-600">{errors.phone}</p>
+                            }
+                        </div>
+
+                        <div className='w-full'>
+                            <TextInputPrimary
+                                label='Address:' 
+                                name='address' 
+                                type="text"
+                                value={data.address} 
+                                placeholder='Enter your Address...'
+                                onChange={setInputValue} 
+                            />
+                            {errors.address &&
+                                <p className="text-sm text-red-600">{errors.address}</p>
+                            }
+                        </div>
                         <div className='w-full flex items-center justify-center pt-1'>
                             <ButtonSubmit 
                                 title='Submit' 
-                                isSubmit={isSubmit} 
+                                isSubmit={data.isSubmit} 
                             />
                         </div>
                     </form>

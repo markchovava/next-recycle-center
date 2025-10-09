@@ -9,8 +9,14 @@ import TextInputPrimary from '@/_components/forms/TextInputPrimary';
 import ButtonSubmit from '@/_components/buttons/ButtonSubmit';
 import TextAreaPrimary from '@/_components/forms/TextAreaPrimary';
 import TitleSecondary from '@/_components/titles/TitleSecondary';
-import { CenterEntity } from '@/_data/entity/CenterEntity';
-import { CenterInterface } from '@/_data/interface/CenterInterface';
+import { CenterEntity, CenterInterface } from '@/_data/entity/CenterEntity';
+import { useCenterStore } from '@/_store/useCenterStore';
+import { _centerStoreAction } from '@/_actions/CenterActions';
+import ImageInputPrimary from '@/_components/forms/ImageInputPrimary';
+import SelectInputSecondary from '@/_components/forms/SelectInputSecondary';
+import { CityData } from '@/_data/sample/CityData';
+import { ProvincesData } from '@/_data/sample/ProvinceData';
+import ErrorPrimary from '@/_components/forms/ErrorPrimary';
 
 
 // --- Framer Motion Variants (Unchanged) ---
@@ -36,47 +42,75 @@ export default function CenterAddModal({
     setIsModal,
     initialData = CenterEntity, // Use prop if provided, otherwise use default
 }: CenterAddModalInterface) {
-    // Use the new CenterInterface for the state
-    const [data, setData] = useState<CenterInterface>(initialData);
-    const [isSubmit, setIsSubmit] = useState<boolean>(false);
+    const {
+        data, 
+        setData, 
+        setInputValue, 
+        setError, 
+        errors,
+        clearErrors, 
+        validateForm, 
+        isSubmitting, 
+        setIsSubmitting,
+        getDataList,
+        setImageFile
+    } = useCenterStore()
+   
+    
 
-    // Ensure the state updates for number inputs convert the value back to a number
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement> |
-        React.ChangeEvent<HTMLTextAreaElement> |
-        React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        const { name, value, type } = e.target;
-        let newValue: string | number = value;
-
-        // Simple type conversion for known number fields (like longitude, latitude)
-        if (type === 'number') {
-             // Use parseFloat to handle decimal numbers
-            newValue = parseFloat(value) || 0;
-        }
-
-        setData({ ...data, [name]: newValue });
-    };
-
+    
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        setIsSubmit(true);
-        try {
-            // Add your form submission logic here (e.g., API call to save center data)
-            console.log('Form data:', data);
-
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            // You might want to change 'Profile updated' to 'Center data updated'
-            toast.success('Center data updated successfully!');
-            setIsModal(false);
-        } catch (error) {
-            toast.error('Failed to update center data. Please try again.');
-            console.error('Form submission error:', error);
-        } finally {
-            setIsSubmit(false);
-        }
+            e.preventDefault();
+            // Clear previous errors
+            clearErrors();
+            // Validate form using store
+            const validation = validateForm();
+            if (!validation.isValid) {
+                // Show the first error as toast
+                const firstError = validation.errors.name || validation.errors.phone ||
+                    validation.errors.email || validation.errors.address ||  validation.errors.city || 
+                    validation.errors.province || validation.errors.description;
+                toast.warn(firstError);
+                return;
+            }
+            setIsSubmitting(true);
+            const formData = new FormData()
+            formData.append("name", data.name);
+            formData.append("phone", data.phone);
+            formData.append("email", data.email);
+            formData.append("address", data.address);
+            formData.append("longitude", data.longitude);
+            formData.append("latitude", data.latitude);
+            formData.append("postalCode", data.postalCode);
+            formData.append("city", data.city);
+            formData.append("province", data.province);
+            formData.append("description", data.description);
+            formData.append("weekdayOpenTime", data.weekdayOpenTime);
+            formData.append("weekdayCloseTime", data.weekdayCloseTime);
+            formData.append("weekendOpenTime", data.weekendOpenTime);
+            formData.append("weekendCloseTime", data.weekendCloseTime);
+            formData.append("holidayOpenTime", data.holidayOpenTime);
+            formData.append("holidayCloseTime", data.holidayCloseTime);
+            if(data.image) {
+                formData.append("image", data.image);
+                formData.append("imageURL", "");
+            }
+            
+            try {
+                const res = await _centerStoreAction(formData);
+                if(res.status === 1){
+                    toast.success(res.message);
+                    await getDataList()
+                    clearErrors();
+                    setIsModal(false);
+                }
+            } catch (error) {
+                toast.error('Failed to save data. Please try again.');
+                console.error('Form submission error:', error);
+            } finally {
+                setIsSubmitting(false);
+            }
     }
 
     return (
@@ -100,62 +134,86 @@ export default function CenterAddModal({
 
                     <form onSubmit={handleSubmit} className='w-full flex flex-col items-start justify-center gap-4'>
                         <div className='w-full'>
-                            <TitlePrimary title="AddCenter" />
+                            <TitlePrimary title="Add Center" />
                         </div>
                         
                         {/* --- Contact Information --- */}
                         <TitleSecondary title="Contact Details" />
-                        <TextInputPrimary
-                            label='Center Name:'
-                            name='name'
-                            type="text"
-                            value={data.name}
-                            placeholder='Enter Center Name...'
-                            onChange={handleInput}
-                        />
-                        <TextInputPrimary
-                            label='Phone:'
-                            name='phone'
-                            type="tel"
-                            value={data.phone}
-                            placeholder='Enter Phone Number...'
-                            onChange={handleInput}
-                        />
-                        <TextInputPrimary
-                            label='Email:'
-                            name='email'
-                            type="email"
-                            value={data.email}
-                            placeholder='Enter Email...'
-                            onChange={handleInput}
-                        />
+                        <div className='flex items-center justify-center'>
+                            <ImageInputPrimary
+                                image={data.imageURL ?? ""}
+                                onImageChange={setImageFile}
+                                maxSize={5 * 1024 * 1024} // 5MB
+                                acceptedFormats={['image/jpeg', 'image/jpg', 'image/png', 'image/gif']}
+                            />
+                        </div>
+                        <div className='w-full'>
+                            <TextInputPrimary
+                                label='Center Name:'
+                                name='name'
+                                type="text"
+                                value={data.name}
+                                placeholder='Enter Center Name...'
+                                onChange={setInputValue}
+                            />
+                            <ErrorPrimary msg={errors.name} />
+                        </div>
+                        <div className='w-full'>
+                            <TextInputPrimary
+                                label='Phone:'
+                                name='phone'
+                                type="tel"
+                                value={data.phone}
+                                placeholder='Enter Phone Number...'
+                                onChange={setInputValue}
+                            />
+                            <ErrorPrimary msg={errors.phone} />
+                        </div>
+                        <div className='w-full'>
+                            <TextInputPrimary
+                                label='Email:'
+                                name='email'
+                                type="email"
+                                value={data.email}
+                                placeholder='Enter Email...'
+                                onChange={setInputValue}
+                            />
+                            <ErrorPrimary msg={errors.email} />
+                        </div>
 
                         {/* --- Location Details --- */}
                         <TitleSecondary title="Location Details" />
-                        <TextAreaPrimary
-                            label='Address:'
-                            name='address'
-                            value={data.address}
-                            placeholder='Enter Street Address...'
-                            onChange={handleInput}
-                        />
+                        <div className='w-full'>
+                            <TextAreaPrimary
+                                label='Address:'
+                                name='address'
+                                value={data.address}
+                                placeholder='Enter Street Address...'
+                                onChange={setInputValue}
+                            />
+                            <ErrorPrimary msg={errors.address} />
+                        </div>
                         <div className='grid grid-cols-2 gap-4 w-full'>
-                            <TextInputPrimary
-                                label='City:'
-                                name='city'
-                                type="text"
-                                value={data.city}
-                                placeholder='Enter City...'
-                                onChange={handleInput}
-                            />
-                            <TextInputPrimary
-                                label='Province:'
-                                name='province'
-                                type="text"
-                                value={data.province}
-                                placeholder='Enter Province/State...'
-                                onChange={handleInput}
-                            />
+                            <div className='w-full'>
+                                <SelectInputSecondary
+                                    label='City:'
+                                    name='city'
+                                    dbData={CityData}
+                                    value={data.city}
+                                    onChange={setInputValue}
+                                />
+                                <ErrorPrimary msg={errors.city} />
+                            </div>
+                            <div className='w-full'>
+                                <SelectInputSecondary
+                                    label='Province:'
+                                    name='province'
+                                    dbData={ProvincesData}
+                                    value={data.province}
+                                    onChange={setInputValue}
+                                />
+                                <ErrorPrimary msg={errors.province} />
+                            </div>
                         </div>
                         <div className='grid grid-cols-3 gap-4 w-full'>
                             <TextInputPrimary
@@ -164,7 +222,7 @@ export default function CenterAddModal({
                                 type="text"
                                 value={data.postalCode}
                                 placeholder='Enter Postal Code...'
-                                onChange={handleInput}
+                                onChange={setInputValue}
                             />
                              <TextInputPrimary
                                 label='Latitude:'
@@ -172,7 +230,7 @@ export default function CenterAddModal({
                                 type="number"
                                 value={data.latitude}
                                 placeholder='Latitude'
-                                onChange={handleInput}
+                                onChange={setInputValue}
                             />
                             <TextInputPrimary
                                 label='Longitude:'
@@ -180,7 +238,7 @@ export default function CenterAddModal({
                                 type="number"
                                 value={data.longitude}
                                 placeholder='Longitude'
-                                onChange={handleInput}
+                                onChange={setInputValue}
                             />
                         </div>
 
@@ -191,7 +249,7 @@ export default function CenterAddModal({
                             name='description'
                             value={data.description}
                             placeholder='Enter a detailed description of the center and its services...'
-                            onChange={handleInput}
+                            onChange={setInputValue}
                         />
 
                         {/* --- Operating Hours --- */}
@@ -203,7 +261,7 @@ export default function CenterAddModal({
                                 placeholder=''
                                 type="time"
                                 value={data.weekdayOpenTime}
-                                onChange={handleInput}
+                                onChange={setInputValue}
                             />
                              <TextInputPrimary
                                 label='Weekday Close Time:'
@@ -211,7 +269,7 @@ export default function CenterAddModal({
                                 type="time"
                                 placeholder=''
                                 value={data.weekdayCloseTime}
-                                onChange={handleInput}
+                                onChange={setInputValue}
                             />
                             <TextInputPrimary
                                 label='Weekend Open Time:'
@@ -219,7 +277,7 @@ export default function CenterAddModal({
                                 type="time"
                                 placeholder=''
                                 value={data.weekendOpenTime}
-                                onChange={handleInput}
+                                onChange={setInputValue}
                             />
                              <TextInputPrimary
                                 label='Weekend Close Time:'
@@ -227,7 +285,7 @@ export default function CenterAddModal({
                                 type="time"
                                 placeholder=''
                                 value={data.weekendCloseTime}
-                                onChange={handleInput}
+                                onChange={setInputValue}
                             />
                              <TextInputPrimary
                                 label='Holiday Open Time:'
@@ -235,7 +293,7 @@ export default function CenterAddModal({
                                 type="time"
                                 placeholder=''
                                 value={data.holidayOpenTime}
-                                onChange={handleInput}
+                                onChange={setInputValue}
                             />
                              <TextInputPrimary
                                 label='Holiday Close Time:'
@@ -243,17 +301,14 @@ export default function CenterAddModal({
                                 placeholder=''
                                 type="time"
                                 value={data.holidayCloseTime}
-                                onChange={handleInput}
+                                onChange={setInputValue}
                             />
                         </div>
-
-                        {/* Note: SelectInputPrimary for 'Publish' was removed as it's not in CenterInterface.
-                           If needed, you can re-add it with a relevant field from the interface or a new one. */}
 
                         <div className='w-full flex items-center justify-center pt-1'>
                             <ButtonSubmit
                                 title='Save Center'
-                                isSubmit={isSubmit}
+                                isSubmit={isSubmitting}
                             />
                         </div>
                     </form>

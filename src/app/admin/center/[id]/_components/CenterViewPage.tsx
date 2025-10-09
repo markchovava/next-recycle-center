@@ -3,29 +3,64 @@ import ButtonPrimary from "@/_components/buttons/ButtonPrimary";
 import RecordPrimary from "@/_components/records/RecordPrimary";
 import SpacerTertiary from "@/_components/spacers/SpacerTertiary";
 import TitlePrimary from "@/_components/titles/TitlePrimary";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CenterData } from "@/_data/sample/CenterData";
 import TitleSecondary from "@/_components/titles/TitleSecondary";
 import BorderPrimary from "@/_components/border/BorderPrimary";
-import { CenterInterface } from "@/_data/interface/CenterInterface";
 import CenterEditModal from "./CenterEditModal";
+import { CenterInterface } from "@/_data/entity/CenterEntity";
+import { useCenterStore } from "@/_store/useCenterStore";
+import LoaderPrimary from "@/_components/loaders/LoaderPrimary";
+import { BaseURL } from "@/_api/BaseURL";
+import ImagePrimary from "@/_components/images/ImagePrimary";
 
 
 
 
-// --- END: Interface and Sample Data Definitions ---
+interface CenterViewPageInterface{
+    id: string | number,
+    dbData: CenterInterface,
+}
 
 
-export default function CenterViewPage({ id }: { id: string | number }) {
+export default function CenterViewPage({ id, dbData }: CenterViewPageInterface ) {
   // Find the center item using the ID
-  const centerItem = CenterData.find(i => i.id === parseInt(id as string));
+  const {
+      data, 
+      preData, 
+      setData, 
+      isLoading, 
+      setImage
+  } = useCenterStore()
 
-  // State to hold the center data and control the modal
-  const [data, setData] = useState<CenterInterface | undefined>(centerItem); 
+
+ useEffect(() => {
+    // Set data first, then set image
+    setData(dbData)
+    const img = dbData.image ? (BaseURL + dbData.image) : "";
+    if (img) {
+      setImage(img)
+    }
+  }, [])
   const [isModal, setIsModal] = useState(false);
 
+
+  /* console.log(id, dbData)
+  console.log("IMAGE: ", preData.image)
+  console.log("IMAGE URL: ", preData.imageURL) */
+
+  if (isLoading) {
+          return (
+            <section className="w-[92%] mx-auto">
+              <TitlePrimary title='View Recycle Center' />
+              <SpacerTertiary />
+              <LoaderPrimary />
+            </section>
+          );
+      }
+
   // Handle case where no center is found
-  if (!data) {
+  if (!preData) {
     return (
       <section className="w-[92%] mx-auto py-12">
         <TitlePrimary title='Service Center Not Found' />
@@ -38,7 +73,7 @@ export default function CenterViewPage({ id }: { id: string | number }) {
     <>
       <section className="w-[92%] mx-auto">
         <SpacerTertiary />
-        <TitlePrimary title={`View Center: ${data.name}`} />
+        <TitlePrimary title={`View Center: ${data.name ?? ""}`} />
         <SpacerTertiary />
         <div className="flex items-center justify-end">
           {/* Note: In a real app, you would pass setData and data to the modal for update */}
@@ -52,35 +87,43 @@ export default function CenterViewPage({ id }: { id: string | number }) {
 
           {/* Section 1: Identifiers and Contact Information */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full pb-4">
-            <RecordPrimary label="Center ID:" value={data.id.toString()} />
-            <RecordPrimary label="User ID (Owner):" value={data.userId.toString()} />
-            <RecordPrimary label="Name:" value={data.name} />
-            <RecordPrimary label="Phone:" value={data.phone} />
-            <RecordPrimary label="Email:" value={data.email} />
-            <RecordPrimary label="Created On:" value={data.createdAt} />
-            <RecordPrimary label="Last Updated:" value={data.updatedAt} />
+            {preData.imageURL && (
+              <ImagePrimary 
+                src={preData.imageURL} 
+                label="Image" 
+              />
+            )}
+            <RecordPrimary label="Center ID:" value={preData.id ?? "Not Added yet."} />
+            <RecordPrimary label="User (Owner):" value={preData.user.name ?? preData.user.email ?? "Not Added yet."} />
+            <RecordPrimary label="Name:" value={preData.name ?? "Not Added yet."} />
+            <RecordPrimary label="Phone:" value={preData.phone ?? "Not Added yet."} />
+            <RecordPrimary label="Email:" value={preData.email ?? "Not Added yet."} />
+            <RecordPrimary label="Created On:" value={preData.createdAt ?? "Not Added yet."} />
+            <RecordPrimary label="Last Updated:" value={preData.updatedAt ?? "Not Added yet."} />
           </div>
           <BorderPrimary />
 
           {/* Section 2: Location Details */}
           <TitleSecondary title="Location" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full pb-4">
-            <RecordPrimary label="Address:" value={data.address} />
-            <RecordPrimary label="City:" value={`${data.city}, ${data.province}`} />
-            <RecordPrimary label="Postal Code:" value={data.postalCode} />
-            <RecordPrimary label="Coordinates:" value={`Lat: ${data.latitude}, Long: ${data.longitude}`} />
+            <RecordPrimary label="Address:" value={preData.address ?? "Not Added yet."} />
+            <RecordPrimary label="City:" value={`${preData.city}, ${preData.province?? "Not Added yet."}`} />
+            <RecordPrimary label="Postal Code:" value={preData.postalCode ?? "Not Added yet."} />
+            <RecordPrimary label="Coordinates:" value={
+              `Lat: ${preData.latitude?? "Not Added yet."}, 
+              Long: ${preData.longitude ?? "Not Added yet."}`} />
           </div>
           <BorderPrimary />
 
           {/* Section 3: Operating Hours */}
           <TitleSecondary title="Operating Hours" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full pb-4">
-            <RecordPrimary label="Weekday Hours:" value={`${data.weekdayOpenTime} - ${data.weekdayCloseTime}`} />
-            <RecordPrimary label="Weekend Hours:" value={`${data.weekendOpenTime} - ${data.weekendCloseTime}`} />
+            <RecordPrimary label="Weekday Hours:" value={`${preData.weekdayOpenTime?? "--:--"} - ${preData.weekdayCloseTime ?? "--:--"}`} />
+            <RecordPrimary label="Weekend Hours:" value={`${preData.weekendOpenTime?? "--:--"} - ${preData.weekendCloseTime ?? "--:--"}`} />
             <RecordPrimary label="Holiday Hours:" value={
-              data.holidayOpenTime === "00:00" && data.holidayCloseTime === "00:00" 
+              preData.holidayOpenTime === "00:00" && preData.holidayCloseTime === "00:00" 
               ? "Closed" 
-              : `${data.holidayOpenTime} - ${data.holidayCloseTime}`
+              : `${preData.holidayOpenTime ?? "--:--"} - ${preData.holidayCloseTime ?? "--:--"}`
             } />
           </div>
           <BorderPrimary />
@@ -89,7 +132,9 @@ export default function CenterViewPage({ id }: { id: string | number }) {
           {/* Section 4: Description/Details */}
           <div className="pt-4 w-full">
             <h3 className="font-semibold text-xl text-gray-700 mb-2">Description</h3>
-            <p className="text-gray-800 text-lg whitespace-pre-wrap p-4 bg-gray-50 rounded-lg">{data.description}</p>
+            <p className="text-gray-800 text-lg whitespace-pre-wrap p-4 bg-gray-50 rounded-lg">
+              {preData.description ?? "Not added yet."}
+            </p>
           </div>
         </div>
         <SpacerTertiary />
@@ -97,7 +142,7 @@ export default function CenterViewPage({ id }: { id: string | number }) {
 
       {/* Note: The modal is only shown if isModal is true */}
       {/* In a real app, CenterEditModal needs to accept and handle CenterInterface data. */}
-      <CenterEditModal isModal={isModal} setIsModal={setIsModal} />
+      <CenterEditModal id={id} isModal={isModal} setIsModal={setIsModal} />
     </>
   )
 }

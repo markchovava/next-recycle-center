@@ -62,7 +62,6 @@ export default function FormLogin() {
         try {
             //  API call
             const res = await loginAction(formData)
-            console.log('res::: ', res)
             if(res.status === 0) {
                 toast.warn(res.message)
                 setErrMsg({...errMsg, email: res.message})
