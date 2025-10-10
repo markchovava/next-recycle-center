@@ -1,3 +1,8 @@
+export const MessageStatusData = [
+  "Unread", "Read"
+]
+
+
 export const MessageData = [
   {
     "id": 1,

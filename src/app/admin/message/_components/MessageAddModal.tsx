@@ -8,9 +8,11 @@ import TitlePrimary from '@/_components/titles/TitlePrimary';
 import TextInputPrimary from '@/_components/forms/TextInputPrimary';
 import ButtonSubmit from '@/_components/buttons/ButtonSubmit';
 import TextAreaPrimary from '@/_components/forms/TextAreaPrimary';
-import SelectInputPrimary from '@/_components/forms/SelectInputPrimary';
 import { MessageEntity } from '@/_data/entity/MessageEntity';
-import { PublishData } from '@/_data/sample/PublishData';
+import { useMessageStore } from '@/_store/useMessageStore';
+import { _messageStoreAction } from '@/_actions/MessageActions';
+import ErrorPrimary from '@/_components/forms/ErrorPrimary';
+import { MessageStatusData } from '@/_data/sample/MessageData';
 
 
 
@@ -35,33 +37,57 @@ export default function MessageAddModal({
         setIsModal
     }: MessageAddModalInterface
 ) {
-    const [data, setData] = useState(MessageEntity)
-    const [isSubmit, setIsSubmit] = useState<boolean>(false)
-
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement> | 
-      React.ChangeEvent<HTMLTextAreaElement> |
-      React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        setData({ ...data, [e.target.name]: e.target.value })
-    }
-
-    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        setIsSubmit(true)  
-        try {
-            // Add your form submission logic here
-            console.log('Form data:', data);
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));  
-            toast.success('Profile updated successfully!');
-            setIsModal(false);
-        } catch (error) {
-            toast.error('Failed to update profile. Please try again.');
-            console.error('Form submission error:', error);
-        } finally {
-            setIsSubmit(false);
+    const {
+            data,  
+            setInputValue, 
+            errors,
+            setError,
+            clearErrors, 
+            validateForm, 
+            isSubmitting, 
+            setIsSubmitting,
+            getDataList,
+            resetData,
+        } = useMessageStore()
+               
+        async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+            e.preventDefault();
+            // Clear previous errors
+            clearErrors();
+            // Validate form using store
+            const validation = validateForm();
+            if (!validation.isValid) {
+                // Show the first error as toast
+                const firstError = validation.errors.email || validation.errors.message;
+                toast.warn(firstError);
+                return;
+            }
+            setIsSubmitting(true);
+            const formData = {
+                name: data.name,
+                email: data.email,
+                title: data.title,
+                message: data.message,
+                status: MessageStatusData[0]
+            }
+            
+            try {
+                const res = await _messageStoreAction(formData);
+                if(res.status === 1){
+                    toast.success(res.message);
+                    await getDataList()
+                    clearErrors();
+                    resetData()
+                    setIsModal(false);
+                    return
+                }
+            } catch (error) {
+                toast.error('Failed to save data. Please try again.');
+                console.error('Form submission error:', error);
+            } finally {
+                setIsSubmitting(false);
+            }
         }
-    }
     
     return (
         <>
@@ -89,10 +115,10 @@ export default function MessageAddModal({
                         <TextInputPrimary
                             label='Name:' 
                             name='name' 
-                            type="email"
-                            value={data.email} 
-                            placeholder='Enter your Email...'
-                            onChange={handleInput} 
+                            type="name"
+                            value={data.name} 
+                            placeholder='Enter your Name...'
+                            onChange={setInputValue} 
                         />
                         <TextInputPrimary
                             label='Title:' 
@@ -100,27 +126,34 @@ export default function MessageAddModal({
                             type="text"
                             value={data.title} 
                             placeholder='Enter your Title...'
-                            onChange={handleInput} 
+                            onChange={setInputValue} 
                         />
-                        <TextInputPrimary
-                            label='Email:' 
-                            name='email' 
-                            type="text"
-                            value={data.email} 
-                            placeholder='Enter your Email...'
-                            onChange={handleInput} 
-                        />
-                        <TextAreaPrimary
-                            label='Message:' 
-                            name='message' 
-                            value={data.message} 
-                            placeholder='Enter your Message...'
-                            onChange={handleInput} 
-                        />
+                        <div className='w-full'>
+                            <TextInputPrimary
+                                label='Email:' 
+                                name='email' 
+                                type="text"
+                                value={data.email} 
+                                placeholder='Enter your Email...'
+                                onChange={setInputValue} 
+                            />
+                            <ErrorPrimary msg={errors.email} />
+
+                        </div>
+                        <div className='w-full'>
+                            <TextAreaPrimary
+                                label='Message:' 
+                                name='message' 
+                                value={data.message} 
+                                placeholder='Enter your Message...'
+                                onChange={setInputValue} 
+                            />
+                            <ErrorPrimary msg={errors.email} />
+                        </div>
                         <div className='w-full flex items-center justify-center pt-1'>
                             <ButtonSubmit 
                                 title='Submit' 
-                                isSubmit={isSubmit} 
+                                isSubmit={isSubmitting} 
                             />
                         </div>
                     </form>

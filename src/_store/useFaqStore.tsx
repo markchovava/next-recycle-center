@@ -12,7 +12,6 @@ interface DataListInterface{
     data: FaqInterface[]
 }
 
-
 interface FaqStoreInterface{
     data: FaqInterface,
     preData: FaqInterface,

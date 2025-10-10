@@ -6,31 +6,64 @@ import Heading2 from '../headings/Heading2'
 import TextAreaPrimary from './TextAreaPrimary'
 import { toast } from 'react-toastify'
 import { ContactEntity } from '@/_data/entity/ContactEntity'
+import { useMessageStore } from '@/_store/useMessageStore'
+import { messageStoreAction } from '@/_actions/MessageActions'
+import { MessageStatusData } from '@/_data/sample/MessageData'
+import ErrorPrimary from './ErrorPrimary'
 
 
 
 
 export default function FormContactSecondary() {
-    const [data, setData] = useState(ContactEntity)
-
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
-        setData({ ...data, [e.target.name]: e.target.value })
-    }
-
+    const {
+        data,  
+        setInputValue, 
+        errors,
+        setError,
+        clearErrors, 
+        validateForm, 
+        isSubmitting, 
+        setIsSubmitting,
+        getDataList,
+        resetData,
+    } = useMessageStore()
+                   
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        setData({ ...data, isSubmit: true }) 
+        // Clear previous errors
+        clearErrors();
+        // Validate form using store
+        const validation = validateForm();
+        if (!validation.isValid) {
+            // Show the first error as toast
+            const firstError = validation.errors.email || validation.errors.message ||
+                validation.errors.title
+            toast.warn(firstError);
+            return;
+        }
+        setIsSubmitting(true);
+        const formData = {
+            name: data.name,
+            email: data.email,
+            title: data.title,
+            message: data.message,
+            status: MessageStatusData[0]
+        }
+        
         try {
-            // Add your form submission logic here
-            console.log('Form data:', data);
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            toast.success('Data updated successfully!');
+            const res = await messageStoreAction(formData);
+            if(res.status === 1){
+                toast.success(res.message);
+                await getDataList()
+                clearErrors();
+                resetData()
+                return
+            }
         } catch (error) {
-            toast.error('Failed to update Data. Please try again.');
+            toast.error('Failed to save data. Please try again.');
             console.error('Form submission error:', error);
         } finally {
-            setData({ ...data, isSubmit: false })
+            setIsSubmitting(false);
         }
     }
 
@@ -47,25 +80,44 @@ export default function FormContactSecondary() {
             name="name"
             value={data.name}
             placeholder="Enter your Name"
-            onChange={handleInput}
+            onChange={setInputValue}
         />
+        <div className='w-full'>
         <TextInputPrimary
-            label="Email:"
-            name="email"
-            value={data.email}
-            placeholder="Enter your Email"
-            onChange={handleInput}
+            label='Email:' 
+            name='email' 
+            type="email"
+            value={data.email} 
+            placeholder='Enter your Email...'
+            onChange={setInputValue} 
         />
-        <TextAreaPrimary
-            label="Message:"
-            name="message"
-            value={data.message}
-            placeholder="Enter your Email"
-            onChange={handleInput}
-        />
+        <ErrorPrimary msg={errors.email} />
+        </div>
+        <div className='w-full'>
+            <TextInputPrimary
+                label='Title:' 
+                name='title' 
+                type="text"
+                value={data.title} 
+                placeholder='Enter your Title...'
+                onChange={setInputValue} 
+            />
+            <ErrorPrimary msg={errors.title} />
+        </div>
+
+        <div className='w-full'>
+            <TextAreaPrimary
+                label='Message:' 
+                name='message' 
+                value={data.message} 
+                placeholder='Enter your Message...'
+                onChange={setInputValue} 
+            />
+            <ErrorPrimary msg={errors.message} />
+        </div>
         <div className='flex items-center justify-center'>
             <ButtonSubmit 
-                isSubmit={data.isSubmit} 
+                isSubmit={isSubmitting} 
                 title="Submit" 
             />
         </div>

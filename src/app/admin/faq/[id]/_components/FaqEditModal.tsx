@@ -8,6 +8,8 @@ import TextInputPrimary from '@/_components/forms/TextInputPrimary';
 import ButtonSubmit from '@/_components/buttons/ButtonSubmit';
 import TextAreaPrimary from '@/_components/forms/TextAreaPrimary';
 import { FaqEntity } from '@/_data/entity/FaqEntity';
+import { _faqUpdateAction } from '@/_actions/FaqActions';
+import { useFaqStore } from '@/_store/useFaqStore';
 
 
 
@@ -22,6 +24,7 @@ const variants: Variants = {
 
 
 interface FaqEditModalInterface{
+    id: string | number,
     isModal: boolean,
     setIsModal: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -29,37 +32,56 @@ interface FaqEditModalInterface{
 
 
 export default function FaqEditModal({
-        isModal, 
-        setIsModal
-    }: FaqEditModalInterface
+    id,
+    isModal, 
+    setIsModal
+}: FaqEditModalInterface
 ) {
-    const [data, setData] = useState(FaqEntity)
-    const [isSubmit, setIsSubmit] = useState<boolean>(false)
-
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement> | 
-      React.ChangeEvent<HTMLTextAreaElement> |
-      React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        setData({ ...data, [e.target.name]: e.target.value })
-    }
-
+    const { 
+        data, 
+        errors, 
+        setInputValue, 
+        validateForm, 
+        clearErrors,  
+        setIsSubmitting,
+        isSubmitting,
+        setData,
+        getData,
+    } = useFaqStore()
+    
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        setIsSubmit(true)  
+        // Clear previous errors
+        clearErrors();
+        // Validate form using store
+        const validation = validateForm();
+        if (!validation.isValid) {
+            // Show the first error as toast
+            const firstError = validation.errors.question || validation.errors.answer
+            toast.warn(firstError);
+            return;
+        }
+        setIsSubmitting(true);
+        const formData = {
+            question: data.question,
+            answer: data.answer,
+        }
         try {
-            // Add your form submission logic here
-            console.log('Form data:', data);
-            
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            toast.success('Faq updated successfully!');
-            setIsModal(false);
+            const res = await _faqUpdateAction(id, formData);
+            if (res.status === 1) {
+                toast.success(res.message);
+                await getData(id);
+                clearErrors();
+                setIsModal(false);
+            } else {
+                toast.error(res.message || 'Failed to update. Please try again.');
+                console.error('Server response:', res);
+            }
         } catch (error) {
-            toast.error('Failed to update profile. Please try again.');
+            toast.error('Failed to save data. Please try again.');
             console.error('Form submission error:', error);
         } finally {
-            setIsSubmit(false);
+            setIsSubmitting(false);
         }
     }
     
@@ -92,20 +114,20 @@ export default function FaqEditModal({
                           type="text"
                           value={data.answer} 
                           placeholder='Enter your answer...'
-                          onChange={handleInput} 
+                          onChange={setInputValue} 
                       />
                       <TextAreaPrimary
                           label='Question:' 
                           name='question' 
                           value={data.question} 
                           placeholder='Enter your Question...'
-                          onChange={handleInput} 
+                          onChange={setInputValue} 
                       />
                     
                       <div className='w-full flex items-center justify-center pt-1'>
                           <ButtonSubmit 
                               title='Submit' 
-                              isSubmit={isSubmit} 
+                              isSubmit={isSubmitting} 
                           />
                       </div>
                   </form>

@@ -7,12 +7,9 @@ import TitlePrimary from '@/_components/titles/TitlePrimary';
 import TextInputPrimary from '@/_components/forms/TextInputPrimary';
 import ButtonSubmit from '@/_components/buttons/ButtonSubmit';
 import TextAreaPrimary from '@/_components/forms/TextAreaPrimary';
-import { MessageEntity } from '@/_data/entity/MessageEntity';
-import { useMessageStore } from '@/_store/useMessageStore';
-import { _messageUpdateAction } from '@/_actions/MessageActions';
-import ErrorPrimary from '@/_components/forms/ErrorPrimary';
-import SelectInputSecondary from '@/_components/forms/SelectInputSecondary';
-import { MessageStatusData } from '@/_data/sample/MessageData';
+import { GettingStartedEntity } from '@/_data/entity/GettingStartedEntity';
+import { _gettingStartedUpdateAction } from '@/_actions/GettingStartedActions';
+import { useGettingStartedStore } from '@/_store/useGettingStartedStore';
 
 
 
@@ -26,32 +23,32 @@ const variants: Variants = {
 }
 
 
-interface MessageEditModalInterface{
-    id: number | string,
+interface GettingStartedEditModalInterface{
+    id: string | number,
     isModal: boolean,
-    setIsModal: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsModal: React.Dispatch<React.SetStateAction<boolean>>
 }
- 
 
 
-export default function MessageEditModal({
-        id,
-        isModal, 
-        setIsModal
-    }: MessageEditModalInterface
+
+export default function GettingStartedEditModal({
+    id,
+    isModal, 
+    setIsModal
+}: GettingStartedEditModalInterface
 ) {
-        const { 
-            data, 
-            errors, 
-            setInputValue, 
-            validateForm, 
-            clearErrors,  
-            setIsSubmitting,
-            isSubmitting,
-            setData,
-            getData,
-        } = useMessageStore()
-        
+    const { 
+        data, 
+        errors, 
+        setInputValue, 
+        validateForm, 
+        clearErrors,  
+        setIsSubmitting,
+        isSubmitting,
+        setData,
+        getData,
+    } = useGettingStartedStore()
+    
         async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
             e.preventDefault();
             // Clear previous errors
@@ -60,20 +57,17 @@ export default function MessageEditModal({
             const validation = validateForm();
             if (!validation.isValid) {
                 // Show the first error as toast
-                const firstError = validation.errors.email || validation.errors.message
+                const firstError = validation.errors.title || validation.errors.content
                 toast.warn(firstError);
                 return;
             }
             setIsSubmitting(true);
             const formData = {
-                name: data.name,
                 title: data.title,
-                email: data.email,
-                message: data.message,
-                status: data.status,
+                content: data.content,
             }
             try {
-                const res = await _messageUpdateAction(id, formData);
+                const res = await _gettingStartedUpdateAction(id, formData);
                 if (res.status === 1) {
                     toast.success(res.message);
                     await getData(id);
@@ -112,7 +106,7 @@ export default function MessageEditModal({
 
                   <form onSubmit={handleSubmit} className='flex flex-col items-start justify-center gap-4'>
                       <div className='w-full'>
-                          <TitlePrimary title="Edit Message" />
+                          <TitlePrimary title="Edit Getting Started" />
                       </div>
                       <TextInputPrimary
                           label='Title:' 
@@ -122,46 +116,13 @@ export default function MessageEditModal({
                           placeholder='Enter your Title...'
                           onChange={setInputValue} 
                       />
-                      <div className='w-full'>
-                        <TextInputPrimary
-                            label='Email:' 
-                            name='email' 
-                            type="text"
-                            value={data.email} 
-                            placeholder='Enter your Email...'
-                            onChange={setInputValue} 
-                        />
-                        <ErrorPrimary msg={errors.email} />
-                      </div>
-                      <TextInputPrimary
-                          label='Name:' 
-                          name='name' 
-                          type="text"
-                          value={data.name} 
-                          placeholder='Enter your Name...'
+                      <TextAreaPrimary
+                          label='Content:' 
+                          name='content' 
+                          value={data.content} 
+                          placeholder='Enter your Content...'
                           onChange={setInputValue} 
                       />
-                      <div className='w-full'>
-                        <TextAreaPrimary
-                            label='Message:' 
-                            name='message' 
-                            value={data.message} 
-                            placeholder='Enter your Message...'
-                            onChange={setInputValue} 
-                            />
-                        <ErrorPrimary msg={errors.message} />
-                      </div>
-
-                    <SelectInputSecondary
-                        label='Status:'
-                        name='status'
-                        value={data.status}
-                        dbData={MessageStatusData}
-                        onChange={setInputValue}
-                    />
-
-
-
                     
                       <div className='w-full flex items-center justify-center pt-1'>
                           <ButtonSubmit 

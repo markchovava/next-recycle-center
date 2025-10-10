@@ -5,10 +5,12 @@ import SpacerPrimary from "@/_components/spacers/SpacerPrimary"
 import SpacerSecondary from "@/_components/spacers/SpacerSecondary"
 import FaqViewPage from "./_components/FaqViewPage"
 import { PageByIdInterface } from "@/_data/interface/PageByIdInterface"
+import { _faqViewAction } from "@/_actions/FaqActions"
 
 
 
-export default function page({params: {id}}: PageByIdInterface) {
+export default async function page({params: {id}}: PageByIdInterface) {
+    const [ faqData ] = await Promise.all([_faqViewAction(id)]);
 
     const BreadCrumbsData = [
         {id: 1, name: "Home", href:"/"},
@@ -24,7 +26,7 @@ export default function page({params: {id}}: PageByIdInterface) {
     <BreadCrumbs dbData={BreadCrumbsData} />
 
     <SpacerSecondary />
-    <FaqViewPage id={id} />
+    <FaqViewPage id={id} dbData={faqData.data} />
     
     <SpacerPrimary /> 
     </>

@@ -4,6 +4,7 @@ import SpacerPrimary from "@/_components/spacers/SpacerPrimary"
 
 import SpacerSecondary from "@/_components/spacers/SpacerSecondary"
 import FaqListPage from "./_components/FaqListPage"
+import { _faqListAction } from "@/_actions/FaqActions"
 
 const BreadCrumbsData = [
     {id: 1, name: "Home", href:"/"},
@@ -12,14 +13,16 @@ const BreadCrumbsData = [
     {id: 3, name: "FAQs List", href:"/admin/faq"},
 ]
 
-export default function page() {
+export default async function page() {
+  const [ faqData ] = await Promise.all([_faqListAction()]);
+
   return (
     <>
     <HeaderPrimary />
     <BreadCrumbs dbData={BreadCrumbsData} />
 
     <SpacerSecondary />
-    <FaqListPage />
+    <FaqListPage dbData={faqData} />
     
     <SpacerPrimary /> 
     </>

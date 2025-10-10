@@ -1,6 +1,6 @@
 "use client"
+ 
 
-import React, { useState } from 'react'
 import { IoClose } from 'react-icons/io5';
 import { toast } from 'react-toastify';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
@@ -8,9 +8,8 @@ import TitlePrimary from '@/_components/titles/TitlePrimary';
 import TextInputPrimary from '@/_components/forms/TextInputPrimary';
 import ButtonSubmit from '@/_components/buttons/ButtonSubmit';
 import TextAreaPrimary from '@/_components/forms/TextAreaPrimary';
-import SelectInputPrimary from '@/_components/forms/SelectInputPrimary';
-import { FaqEntity } from '@/_data/entity/FaqEntity';
-import { PublishData } from '@/_data/sample/PublishData';
+import { _faqStoreAction } from '@/_actions/FaqActions';
+import { useFaqStore } from '@/_store/useFaqStore';
 
 
 
@@ -35,34 +34,53 @@ export default function FaqAddModal({
         setIsModal
     }: FaqAddModalInterface
 ) {
-    const [data, setData] = useState(FaqEntity)
-    const [isSubmit, setIsSubmit] = useState<boolean>(false)
-
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement> | 
-      React.ChangeEvent<HTMLTextAreaElement> |
-      React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        setData({ ...data, [e.target.name]: e.target.value })
-    }
-
+    const {
+        data,  
+        setInputValue, 
+        errors,
+        setError,
+        clearErrors, 
+        validateForm, 
+        isSubmitting, 
+        setIsSubmitting,
+        getDataList,
+        resetData,
+    } = useFaqStore()
+           
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        setIsSubmit(true)  
-        try {
-            // Add your form submission logic here
-            console.log('Form data:', data);
+            e.preventDefault();
+            // Clear previous errors
+            clearErrors();
+            // Validate form using store
+            const validation = validateForm();
+            if (!validation.isValid) {
+                // Show the first error as toast
+                const firstError = validation.errors.question || validation.errors.answer;
+                toast.warn(firstError);
+                return;
+            }
+            setIsSubmitting(true);
+            const formData = {
+                question: data.question,
+                answer: data.answer,
+            }
             
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            toast.success('Profile updated successfully!');
-            setIsModal(false);
-        } catch (error) {
-            toast.error('Failed to update profile. Please try again.');
-            console.error('Form submission error:', error);
-        } finally {
-            setIsSubmit(false);
-        }
+            try {
+                const res = await _faqStoreAction(formData);
+                if(res.status === 1){
+                    toast.success(res.message);
+                    await getDataList()
+                    clearErrors();
+                    resetData()
+                    setIsModal(false);
+                    return
+                }
+            } catch (error) {
+                toast.error('Failed to save data. Please try again.');
+                console.error('Form submission error:', error);
+            } finally {
+                setIsSubmitting(false);
+            }
     }
     
     return (
@@ -93,20 +111,20 @@ export default function FaqAddModal({
                             name='question' 
                             type="text"
                             value={data.question} 
-                            placeholder='Enter your Title...'
-                            onChange={handleInput} 
+                            placeholder='Enter your Question...'
+                            onChange={setInputValue} 
                         />
                         <TextAreaPrimary
                             label='Answer:' 
                             name='answer' 
                             value={data.answer} 
-                            placeholder='Enter your Details...'
-                            onChange={handleInput} 
+                            placeholder='Enter your Answer...'
+                            onChange={setInputValue} 
                         />
                         <div className='w-full flex items-center justify-center pt-1'>
                             <ButtonSubmit 
                                 title='Submit' 
-                                isSubmit={isSubmit} 
+                                isSubmit={isSubmitting} 
                             />
                         </div>
                     </form>

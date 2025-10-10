@@ -1,3 +1,5 @@
+import { UserEntity, UserInterface } from "./UserEntity"
+
 export interface FaqInterface {
     id: number,
     userId: number,
@@ -5,6 +7,7 @@ export interface FaqInterface {
     answer: string,
     createdAt: string,
     updatedAt: string,
+    user: UserInterface
 }
 
 
@@ -15,4 +18,5 @@ export const FaqEntity = {
     answer: "",
     createdAt: "",
     updatedAt: "",
+    user: UserEntity
 }

@@ -120,7 +120,7 @@ export default function UserAddModal({
 
                     <form onSubmit={handleSubmit} className='flex flex-col items-start justify-center gap-4'>
                         <div className='w-full'>
-                            <TitlePrimary title="Edit Profile" />
+                            <TitlePrimary title="Add User" />
                         </div>
                         <div className='w-full'>
                             <TextInputPrimary

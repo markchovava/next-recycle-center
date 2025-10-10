@@ -10,6 +10,7 @@ import SelectInputPrimary from '@/_components/forms/SelectInputPrimary';
 import { useUserStore } from '@/_store/useUserStore';
 import ErrorPrimary from '@/_components/forms/ErrorPrimary';
 import { _userStoreAction, _userUpdateAction } from '@/_actions/UserActions';
+import { RolesData } from '@/_data/sample/RolesData';
 
 
 
@@ -31,21 +32,9 @@ interface UserEditModalInterface{
 
 
 
-export const UserEntity = {
-    name: "",
-    email: "",
-    address: "",
-    phone: "",
-    password: "",
-    code: "",
-    role: "user",
-}
 
 
-const RolesData = [
-  { value: 'admin', label: 'Admin' },
-  { value: 'user', label: 'User' },
-]
+
 
 export default function UserEditModal({
     id,
@@ -65,7 +54,7 @@ export default function UserEditModal({
         getData,
     } = useUserStore()
 
-     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         // Clear previous errors
         clearErrors();
@@ -126,7 +115,7 @@ export default function UserEditModal({
 
                     <form onSubmit={handleSubmit} className='flex flex-col items-start justify-center gap-4'>
                         <div className='w-full'>
-                            <TitlePrimary title="Edit User" />
+                            <TitlePrimary title="Add User" />
                         </div>
                         <div className='w-full'>
                             <TextInputPrimary
@@ -139,7 +128,7 @@ export default function UserEditModal({
                             />
                             <ErrorPrimary msg={errors.name} />
                         </div>
-                         <div className='w-full'>
+                        <div className='w-full'>
                             <TextInputPrimary
                                 label='Email:' 
                                 name='email' 
@@ -149,8 +138,8 @@ export default function UserEditModal({
                                 onChange={setInputValue} 
                             />
                             <ErrorPrimary msg={errors.email} />
-                         </div>
-                          <div className='w-full'>
+                        </div>
+                        <div className='w-full'>
                             <TextInputPrimary
                                 label='Phone Number:' 
                                 name='phone' 
@@ -160,7 +149,7 @@ export default function UserEditModal({
                                 onChange={setInputValue} 
                             />
                             <ErrorPrimary msg={errors.phone} />
-                          </div>
+                        </div>
                         <TextInputPrimary
                             label='Address:' 
                             name='address' 
@@ -169,13 +158,16 @@ export default function UserEditModal({
                             placeholder='Enter your Address...'
                             onChange={setInputValue} 
                         />
-                        <SelectInputPrimary
-                            label='Role:'
-                            name='role'
-                            value={data.role}
-                            dbData={RolesData}
-                            onChange={setInputValue}
-                        />
+                        <div className='w-full'>
+                            <SelectInputPrimary
+                                label='Role:'
+                                name='roleLevel'
+                                value={data.roleLevel}
+                                dbData={RolesData}
+                                onChange={setInputValue}
+                            />
+                            <ErrorPrimary msg={errors.role} />
+                        </div>
 
                         <div className='w-full flex items-center justify-center pt-1'>
                             <ButtonSubmit 

@@ -10,7 +10,7 @@ export const HelpData = [
     {
         id: 3, 
         title: "Getting Started", 
-        href: "/admin/message",
+        href: "/admin/getting-started",
         desc: "Send, receive, and manage communications with other users or support.", 
         iconType: "how-to", 
         css: "text-zinc-600"

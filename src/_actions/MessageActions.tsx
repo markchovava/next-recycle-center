@@ -7,6 +7,22 @@ import { redirect } from "next/navigation";
 
 
 
+
+export async function messageStoreAction(data: any) {
+    const res = await fetch(`${BaseURL}message/`, {
+      'method': 'POST',
+      'body': JSON.stringify(data),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    });
+    revalidatePath('/admin/message');
+    return await res.json();
+}
+
+
+
 export async function _messageSearchAction(search: string) {
     const cookieStore = await cookies();
     const authToken = await cookieStore.get('RECYCLEMATE_AUTH_TOKEN_COOKIE');

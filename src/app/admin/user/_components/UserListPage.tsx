@@ -43,10 +43,6 @@ export default function UserListPage({dbData}: {dbData: any}) {
         setDataList(dbData)
     }, [])
 
-    console.log(dbData)
-
-
-   
 
     async function handleDelete(id: string | number){
         try{

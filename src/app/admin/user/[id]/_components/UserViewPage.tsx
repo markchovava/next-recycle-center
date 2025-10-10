@@ -13,7 +13,7 @@ import { UserRole } from "@/_data/sample/RolesData";
 interface UserViewPageInterface{
   id: string | number, 
   dbData: UserInterface
-}
+} 
 
 export default function UserViewPage({ id, dbData }: UserViewPageInterface) {
   const [isModal, setIsModal] = useState<boolean>(false)

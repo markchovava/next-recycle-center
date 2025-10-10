@@ -1,3 +1,5 @@
+import { UserEntity, UserInterface } from "./UserEntity"
+
 export interface MessageInterface {
     id: number,
     userId: number,
@@ -8,6 +10,7 @@ export interface MessageInterface {
     status: string,
     createdAt: string,
     updatedAt: string,
+    user: UserInterface
 }
 
 
@@ -21,5 +24,6 @@ export const MessageEntity = {
     title: "",
     status: "",
     createdAt: "",
-    updatedAt: ""
+    updatedAt: "",
+    user: UserEntity
 }
