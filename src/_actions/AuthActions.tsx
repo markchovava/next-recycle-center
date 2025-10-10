@@ -70,3 +70,21 @@ export async function _authViewAction() {
     });
     return await res.json();
 }
+
+
+
+export async function _logout() {
+    const cookieStore = await cookies();
+    const authToken = await cookieStore.get('RECYCLEMATE_AUTH_TOKEN_COOKIE');
+    if(!authToken?.value){ redirect('/login'); }
+
+    const res = await fetch(`${BaseURL}api/logout`, {
+      'method': 'GET',
+      headers: {
+        'Authorization': `Bearer ${authToken?.value}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    });
+    return await res.json();
+}

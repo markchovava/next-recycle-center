@@ -5,7 +5,7 @@ import Link from 'next/link'
 export default function LogoPrimary() {
   return (
     <>
-    <Link href='/' className='flex items-center justify-center gap-2'>
+    <Link href='/' className='flex items-center justify-center gap-2 transition-all ease-initial duration-300'>
         <Image 
             src="/assets/img/logo_icon.png" 
             alt="Logo" 

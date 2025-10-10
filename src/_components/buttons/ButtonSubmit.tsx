@@ -19,7 +19,7 @@ export default function ButtonSubmit({
         text-white bg-green-700 hover:bg-green-800 hover:drop-shadow 
         ${isSubmit ? "bg-green-800 cursor-not-allowed" : ""}`}>
             { isSubmit ? 
-            "Submitting..." : 
+            "Processing..." : 
             title }
     </button>
   )
