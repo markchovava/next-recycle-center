@@ -69,7 +69,7 @@ export default function CenterPage() {
                 ))}
             </div>
             <SpacerTertiary />
-            <PaginationPrimary />
+            
             
         </div>
     </section>

@@ -12,7 +12,9 @@ export const metadata: Metadata = {
 };
 
 
-export default function page({params: {id}}: PageByIdInterface) {
+export default async function page({params: {id} }: PageByIdInterface) {
+
+
   return (
     <>
     <HeaderTertiary title='News' />

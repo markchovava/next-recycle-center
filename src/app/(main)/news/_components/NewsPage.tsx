@@ -2,7 +2,6 @@
 import CardNews from "@/_components/cards/CardNews";
 import FormSearch from "@/_components/forms/FormSearch";
 import Heading2 from "@/_components/headings/Heading2";
-import PaginationPrimary from "@/_components/pagination/PaginationPrimary";
 import SpacerPrimary from "@/_components/spacers/SpacerPrimary";
 import SpacerQuaternary from "@/_components/spacers/SpacerQuaternary";
 import SpacerSecondary from "@/_components/spacers/SpacerSecondary";
@@ -66,26 +65,25 @@ export default function NewsPage() {
         <SpacerQuaternary /> 
         <SpacerQuaternary /> 
         <div className="w-[85%] mx-auto grid lg:grid-cols-5 grid-cols-3 gap-4">
-            {NewsCategoriesData.map((i, key) => (
+            {/* {NewsCategoriesData.map((i, key) => (
                 <div key={key} className={` flex items-center justify-center cursor-pointer border border-gray-600 text-gray-800 
                     ease-initial duration-200 transition-all hover:bg-gray-600 hover:text-white rounded-full px-3 py-1 
                     text-center text-sm`}>
                     {i.name}
                 </div>
-            ))}
+            ))} */}
         </div>
 
         <div className="lg:w-[85%] w-[92%] mx-auto">
             <SpacerSecondary />
             <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
-                {NewsData.map((i, key) => (
+                {/* {NewsData.map((i, key) => (
                     <div key={key} className="bg-white drop-shadow rounded-lg overflow-hidden">
                         <CardNews dbData={i} />
                     </div>
-                ))}
+                ))} */}
             </div>
             <SpacerTertiary />
-            <PaginationPrimary />
             
         </div>
     </section>

@@ -76,7 +76,7 @@ export default function FaqPage() {
                     ))}
 
                     <SpacerTertiary />
-                    <PaginationPrimary />
+                    
                 </div>
             </section>
         </FadeSlideIn>
