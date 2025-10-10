@@ -12,7 +12,7 @@ export default function ImagePrimary({src, label}: ImagePrimaryInterface) {
     <div className='w-[100%] flex lg:flex-row flex-col text-lg lg:gap-2'>
         <div className='md:w-[16%] w-full font-light'>{label}</div>
         <div className='flex-1'>
-            <div className="lg:w-[50%] w-[70%] aspect-[5/4] relative rounded-xl overflow-hidden bg-white drop-shadow">
+            <div className="md:w-[40%] w-[70%] aspect-[5/4] relative rounded-xl overflow-hidden bg-white drop-shadow">
                 <Image 
                     src={src} 
                     fill

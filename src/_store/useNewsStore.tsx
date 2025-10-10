@@ -1,24 +1,24 @@
-import { _centerDeleteAction, _centerStoreAction, centerListAction, centerPaginateAction, centerSearchAction, centerViewAction } from "@/_actions/CenterActions";
+import { _newsDeleteAction, _newsStoreAction, _newsListAction, _newsPaginateAction, _newsSearchAction, _newsViewAction, _newsUpdateAction } from "@/_actions/NewsActions";
 import { BaseURL } from "@/_api/BaseURL";
-import { CenterEntity, CenterInterface } from "@/_data/entity/CenterEntity";
-import { MetaEntity, MetaInterface, MetaLinksEntity, MetaLinksInterface, ResponseInterface } from "@/_data/entity/ResponseEntity";
+import { NewsEntity, NewsInterface } from "@/_data/entity/NewsEntity";
+import { MetaEntity, MetaInterface, MetaLinksEntity, MetaLinksInterface } from "@/_data/entity/ResponseEntity";
 import { create } from "zustand";
 
 
 interface DataListInterface{
     meta: MetaInterface,
     links: MetaLinksInterface
-    data: CenterInterface[]
+    data: NewsInterface[]
 }
 
 
-interface CenterStoreInterface{
-    data: CenterInterface,
-    preData: CenterInterface,
+interface NewsStoreInterface{
+    data: NewsInterface,
+    preData: NewsInterface,
     message: string,
-    errors: CenterInterface,
+    errors: Partial<Record<keyof NewsInterface, string>>,
     isLoading: boolean,
-    dataList: CenterInterface[],
+    dataList: NewsInterface[],
     isSearching: boolean,
     isSubmitting: boolean,
     search: string,
@@ -32,32 +32,32 @@ interface CenterStoreInterface{
     ) => void,
     setDataList: (data: DataListInterface) => void,
     setImage: (img: string) => void,
-    setData: (data: CenterInterface) => void,
+    setData: (data: NewsInterface) => void,
     getData: (id: string | number) => void,
     setMessage: (i: string) => void,
     setSearch: (e: React.ChangeEvent<HTMLInputElement>) => void,
     setIsSubmitting: (status: boolean) => void,
-    setDelete: (id: number | string) => void,
-    setUpdate: (id: number | string) => void,
-    setStore: (data: CenterInterface) => void,
+    setDelete: (id: number | string) => Promise<void>,
+    setUpdate: (id: number | string) => Promise<void>,
+    setStore: (data: NewsInterface) => Promise<void>,
     validateField: (name: string, value: string) => string,
-    validateForm: () => { isValid: boolean; errors: CenterInterface },
+    validateForm: () => { isValid: boolean; errors: Partial<Record<keyof NewsInterface, string>> },
     clearErrors: () => void,
-    setError: (field: keyof CenterInterface, message: string) => void,
+    resetData: () => void,
+    setError: (field: keyof NewsInterface, message: string) => void,
     getDataList: () => Promise<void>,
     getPaginatedDataList: (url: string) => Promise<void>,
     setImageFile: (file: File | null) => void,
     setNewImageFile: (file: File | null) => void,
     getSearchDataList: (search: string) => void,
-
 }
 
 
-export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
-    data: CenterEntity,
-    preData: CenterEntity,
+export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
+    data: NewsEntity,
+    preData: NewsEntity,
     message: "",
-    errors: CenterEntity,
+    errors: {},
     meta: MetaEntity,
     links: MetaLinksEntity,
     isLoading: true,
@@ -65,12 +65,18 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
     search: "",
     isSubmitting: false,
     dataList: [],
+    
     // Actions
     setMessage: (msg) => {
+        set({ message: msg })
+    },
+
+    resetData: () => {
         set({
-            message: msg
+            data: NewsEntity,
         })
     },
+    
     setImage: (img) => {
         set((state) => ({
             data: {
@@ -83,12 +89,12 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
             }
         }))
     },
+    
     setSearch: (e) => {
         const { value } = e.target;
-        set({
-            search: value
-        })
+        set({ search: value })
     },
+    
     setNewImageFile: (file) => {
         set((state) => ({
             data: {
@@ -97,6 +103,7 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
             }
         }))
     },
+    
     setImageFile: (file) => {
         set((state) => ({
             data: {
@@ -105,10 +112,12 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
             }
         }))
     },
+    
     setInputValue: (e) => {
         const { name, value } = e.target;
         const currentData = get().data;
         const currentErrors = get().errors;
+        
         set({
             data: {
                 ...currentData,
@@ -120,6 +129,7 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
                 : currentErrors
         });
     },
+    
     setData: (data) => {
         set({
             data: data,
@@ -127,6 +137,7 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
             isLoading: false,
         })
     },
+    
     setDataList: (res) => {
         const {links, meta, data} = res
         set({
@@ -136,45 +147,27 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
             isLoading: false,
         })
     },
+    
     setIsSubmitting: (status) => {
         set({isSubmitting: status})
     },
+    
     validateField: (name, value) => {
         let error = ""
         switch(name){
-            case "name":
+            case "title":
                 if(!value.trim()) {
-                    error = "Name is required.";
+                    error = "Title is required.";
                 }
                 break;
-            case "phone":
+            case "content":
                 if(!value.trim()) {
-                    error = "Phone is required.";
+                    error = "Content is required.";
                 }
                 break;
-            case "email":
-                if(!value.trim()){
-                    error = "Email is required.";
-                } 
-                break;
-            case "address":
+            case "status":
                 if (!value.trim()) {
-                    error = "Address is required.";
-                }
-                break;
-            case "city":
-                if (!value.trim()) {
-                    error = "City is required.";
-                }
-                break;
-            case "province":
-                if (!value.trim()) {
-                    error = "Province is required.";
-                }
-                break;
-            case "description":
-                if(!value.trim()){
-                    error = "Description is required.";
+                    error = "Status is required.";
                 }
                 break;
             default:
@@ -182,62 +175,45 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
         }
         return error
     },
+    
     validateForm: () => { 
         const { data } = get();
-        let errors = { ...CenterEntity };
+        let errors: Partial<Record<keyof NewsInterface, string>> = {};
         let hasError = false;
-        // Validate name
-        const nameError = get().validateField("name", data.name);
-        if (nameError) {
-            errors.name = nameError;
+        
+        // Validate title
+        const titleError = get().validateField("title", data.title);
+        if (titleError) {
+            errors.title = titleError;
             hasError = true;
         }
-        // Validate PHONE
-        const phoneError = get().validateField("phone", data.phone);
-        if (phoneError) {
-            errors.phone = phoneError;
+        
+        // Validate content
+        const contentError = get().validateField("content", data.content);
+        if (contentError) {
+            errors.content = contentError;
             hasError = true;
         }
-        // Validate PHONE
-        const emailError = get().validateField("email", data.email);
-        if (emailError) {
-            errors.email = emailError;
+        
+        // Validate status
+        const statusError = get().validateField("status", data.status);
+        if (statusError) {
+            errors.status = statusError;
             hasError = true;
         }
-        // Validate Email
-        const addressError = get().validateField("address", data.address);
-        if (addressError) {
-            errors.address = addressError;
-            hasError = true;
-        }
-        // Validate City
-        const cityError = get().validateField("city", data.city);
-        if (cityError) {
-            errors.city = cityError;
-            hasError = true;
-        }
-         // Validate Province
-        const provinceError = get().validateField("province", data.province);
-        if (provinceError) {
-            errors.province = provinceError;
-            hasError = true;
-        }
-        // Validate Description
-        const descriptionError = get().validateField("description", data.description);
-        if (descriptionError) {
-            errors.description = descriptionError;
-            hasError = true;
-        }
-       
+
+        
         set({ errors });
         return {
             isValid: !hasError,
             errors
         };
     },
+    
     clearErrors: () => {
-        set({ errors: CenterEntity })
+        set({ errors: {} })
     },
+    
     setError: (field, message) => {
         set((state) => ({
             errors: {
@@ -246,14 +222,143 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
             }
         }));
     },
-    setDelete: (id) => {},
-    setUpdate: (id) => {},
-    setStore: (data) => {},
+    
+    setDelete: async (id) => {
+        set({ isSubmitting: true });
+        try {
+            const res = await _newsDeleteAction(id);
+            if (res.success) {
+                // Remove the deleted item from dataList
+                set((state) => ({
+                    dataList: state.dataList.filter(item => item.id !== id),
+                    message: res.message || "News deleted successfully",
+                    isSubmitting: false,
+                }));
+            } else {
+                set({
+                    message: res.message || "Failed to delete news",
+                    isSubmitting: false,
+                });
+            }
+        } catch (error) {
+            console.error(`Error deleting news: ${error}`);
+            set({
+                message: "An error occurred while deleting news",
+                isSubmitting: false,
+            });
+        }
+    },
+    
+    setUpdate: async (id) => {
+        const { data } = get();
+        const validation = get().validateForm();
+        
+        if (!validation.isValid) {
+            return;
+        }
+        
+        set({ isSubmitting: true });
+        try {
+            const formData = new FormData();
+            formData.append("title", data.title);
+            formData.append("content", data.content);
+            formData.append("author", data.author);
+            formData.append("priority", String(data.priority));
+            formData.append("status", data.status);
+            
+            if (data.newImage) {
+                formData.append("image", data.newImage);
+            }
+            
+            const res = await _newsUpdateAction(id, formData);
+            
+            if (res.success) {
+                set({
+                    data: res.data || data,
+                    preData: res.data || data,
+                    message: res.message || "News updated successfully",
+                    isSubmitting: false,
+                    errors: {},
+                });
+                
+                // Update the item in dataList
+                set((state) => ({
+                    dataList: state.dataList.map(item => 
+                        item.id === id ? (res.data || data) : item
+                    ),
+                }));
+            } else {
+                set({
+                    message: res.message || "Failed to update news",
+                    errors: res.errors || {},
+                    isSubmitting: false,
+                });
+            }
+        } catch (error) {
+            console.error(`Error updating news: ${error}`);
+            set({
+                message: "An error occurred while updating news",
+                isSubmitting: false,
+            });
+        }
+    },
+    
+    setStore: async (data) => {
+        const validation = get().validateForm();
+        
+        if (!validation.isValid) {
+            return;
+        }
+        
+        set({ isSubmitting: true });
+        try {
+            const formData = new FormData();
+            formData.append("title", data.title);
+            formData.append("content", data.content);
+            formData.append("author", data.author);
+            formData.append("priority", data.priority.toString());
+            formData.append("status", data.status);
+            
+            if (data.newImage) {
+                formData.append("image", data.newImage);
+            }
+            
+            const res = await _newsStoreAction(formData);
+            
+            if (res.success) {
+                set({
+                    data: NewsEntity,
+                    message: res.message || "News created successfully",
+                    isSubmitting: false,
+                    errors: {},
+                });
+                
+                // Add the new item to dataList
+                if (res.data) {
+                    set((state) => ({
+                        dataList: [res.data, ...state.dataList],
+                    }));
+                }
+            } else {
+                set({
+                    message: res.message || "Failed to create news",
+                    errors: res.errors || {},
+                    isSubmitting: false,
+                });
+            }
+        } catch (error) {
+            console.error(`Error creating news: ${error}`);
+            set({
+                message: "An error occurred while creating news",
+                isSubmitting: false,
+            });
+        }
+    },
+    
     getDataList: async () => {
         set({ isLoading: true });
         try {
-            const res = await centerListAction();
-            // Check if response has the expected structure
+            const res = await _newsListAction();
             if (res && res.data && res.meta && res.links) {
                 set({
                     dataList: res.data,
@@ -262,7 +367,6 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
                     isLoading: false,
                 });
             } else {
-                // Fallback if structure is different
                 set({
                     dataList: Array.isArray(res) ? res : res.data || [],
                     meta: res.meta || MetaEntity,
@@ -280,12 +384,12 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
             });
         }
     },
+    
     getData: async (id) => {
         set({ isLoading: true });
         try {
-            const res = await centerViewAction(id);
-            // Check if response has the expected structure
-            if (res && res.data ) {
+            const res = await _newsViewAction(id);
+            if (res && res.data) {
                 set({
                     data: res.data,
                     preData: res.data,
@@ -299,27 +403,26 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
                     }))
                 }
             } else {
-                // Fallback if structure is different
                 set({
-                    data: CenterEntity,
-                    preData: CenterEntity,
+                    data: NewsEntity,
+                    preData: NewsEntity,
                     isLoading: false,
                 });
             }
         } catch (error) {
             console.error(`Error: ${error}`);
             set({
-                data: CenterEntity,
-                preData: CenterEntity,
+                data: NewsEntity,
+                preData: NewsEntity,
                 isLoading: false,
             });
         }
     },
+    
     getPaginatedDataList: async (url) => {
         set({ isLoading: true });
         try {
-            const res = await centerPaginateAction(url);
-            // Check if response has the expected structure
+            const res = await _newsPaginateAction(url);
             if (res && res.data && res.meta && res.links) {
                 set({
                     dataList: res.data,
@@ -328,7 +431,6 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
                     isLoading: false,
                 });
             } else {
-                // Fallback if structure is different
                 set({
                     dataList: Array.isArray(res) ? res : res.data || [],
                     meta: res.meta || MetaEntity,
@@ -346,11 +448,11 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
             });
         }
     },
+    
     getSearchDataList: async (search) => {
         set({ isSearching: true });
         try {
-            const res = await centerSearchAction(search);
-            // Check if response has the expected structure
+            const res = await _newsSearchAction(search);
             if (res && res.data && res.meta && res.links) {
                 set({
                     dataList: res.data,
@@ -359,7 +461,6 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
                     isSearching: false,
                 });
             } else {
-                // Fallback if structure is different
                 set({
                     dataList: Array.isArray(res) ? res : res.data || [],
                     meta: res.meta || MetaEntity,
@@ -377,6 +478,4 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
             });
         }
     },
-   
-
 }))

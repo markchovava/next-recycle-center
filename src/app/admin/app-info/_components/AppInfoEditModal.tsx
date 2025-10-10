@@ -10,6 +10,9 @@ import TitlePrimary from '@/_components/titles/TitlePrimary';
 import TextInputPrimary from '@/_components/forms/TextInputPrimary';
 import ButtonSubmit from '@/_components/buttons/ButtonSubmit';
 import TextAreaPrimary from '@/_components/forms/TextAreaPrimary';
+import { useAppInfoStore } from '@/_store/useAppInfoStore';
+import { _appInfoStoreAction, appInfoViewAction } from '@/_actions/AppInfoActions';
+import ErrorPrimary from '@/_components/forms/ErrorPrimary';
 
 
 
@@ -65,30 +68,62 @@ export default function AppInfoEditModal({
         setIsModal
     }: AppEditEditModalInterface
 ) {
-    const [data, setData] = useState<AppInfoInterface>(AppInfoEntity)
-    const [isSubmit, setIsSubmit] = useState<boolean>(false)
-
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
-        setData({ ...data, [e.target.name]: e.target.value })
-    }
-
+    const {
+        setData, 
+        getData,
+        setInputValue, 
+        data, 
+        isSubmitting, 
+        setIsSubmitting, 
+        errors, 
+        clearErrors,
+        validateForm
+    } = useAppInfoStore()
+    
+    
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        setIsSubmit(true)  
+        // Clear previous errors
+        clearErrors();
+        // Validate form using store
+        const validation = validateForm();
+        if (!validation.isValid) {
+            // Show the first error as toast
+            const firstError = validation.errors.name || validation.errors.phone ||
+                validation.errors.email || validation.errors.address
+            toast.warn(firstError);
+            return;
+        }
+        setIsSubmitting(true);
+        const formData = {
+            name: data.name,
+            phone: data.phone,
+            email: data.email,
+            address: data.address,
+            description: data.description,
+            website: data.website,
+            facebook: data.facebook,
+            tiktok: data.twitter,
+            instagram: data.instagram,
+            whatsapp: data.whatsapp,
+            twitter: data.twitter,
+        }
         try {
-            // Add your form submission logic here
-            console.log('Form data:', data);
-            
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            toast.success('Profile updated successfully!');
-            setIsModal(false);
+            const res = await _appInfoStoreAction(formData);
+            if (res.status === 1) {
+                toast.success(res.message);
+                await getData();
+                clearErrors();
+                setIsModal(false);
+            } else {
+                toast.error(res.message || 'Failed to update. Please try again.');
+                console.error('Server response:', res);
+            }
         } catch (error) {
-            toast.error('Failed to update profile. Please try again.');
+            toast.error('Failed to save data. Please try again.');
             console.error('Form submission error:', error);
         } finally {
-            setIsSubmit(false);
+            setIsSubmitting(false);
         }
     }
     
@@ -113,62 +148,85 @@ export default function AppInfoEditModal({
 
                     <form onSubmit={handleSubmit} className='flex flex-col items-start justify-center gap-4'>
                         <div className='w-full'>
-                            <TitlePrimary title="Edit Profile" />
+                            <TitlePrimary title="Edit App Information" />
                         </div>
-                        <TextInputPrimary
-                            label='Name:' 
-                            name='name' 
-                            type="text"
-                            value={data.name} 
-                            placeholder='Enter your Name...'
-                            onChange={handleInput} 
-                        />
+                        <div className='w-full'>
+                            <TextInputPrimary
+                                label='Name:' 
+                                name='name' 
+                                type="text"
+                                value={data.name} 
+                                placeholder='Enter your Name...'
+                                onChange={setInputValue} 
+                            />
+                            <ErrorPrimary msg={errors.name} />
+                        </div>
                         <TextAreaPrimary
                             label='Description:' 
                             name='description' 
                             value={data.description} 
                             placeholder='Enter your Description...'
-                            onChange={handleInput} 
+                            onChange={setInputValue} 
                         />
-                        <TextInputPrimary
-                            label='Email:' 
-                            name='email' 
-                            type="email"
-                            value={data.email} 
-                            placeholder='Enter your Email...'
-                            onChange={handleInput} 
-                        />
-                        <TextInputPrimary
-                            label='Phone Number:' 
-                            name='phone' 
-                            type="text"
-                            value={data.phone} 
-                            placeholder='Enter your Phone Number...'
-                            onChange={handleInput} 
-                        />
-                        <TextInputPrimary
-                            label='Address:' 
-                            name='address' 
-                            type="text"
-                            value={data.address} 
-                            placeholder='Enter your Address...'
-                            onChange={handleInput} 
-                        />
-                        <TextInputPrimary
-                            label='WhatsApp:' 
-                            name='whatsapp' 
-                            type="text"
-                            value={data.whatsapp} 
-                            placeholder='Enter your WhatsApp URL...'
-                            onChange={handleInput} 
-                        />
+                         <div className='w-full'>
+                            <TextInputPrimary
+                                label='Email:' 
+                                name='email' 
+                                type="email"
+                                value={data.email} 
+                                placeholder='Enter your Email...'
+                                onChange={setInputValue} 
+                            />
+                            <ErrorPrimary msg={errors.email} />
+                        </div>
+                         <div className='w-full'>   
+                            <TextInputPrimary
+                                label='Phone Number:' 
+                                name='phone' 
+                                type="text"
+                                value={data.phone} 
+                                placeholder='Enter your Phone Number...'
+                                onChange={setInputValue} 
+                            />
+                            <ErrorPrimary msg={errors.phone} />
+                        </div>
+                         <div className='w-full'>
+                            <TextInputPrimary
+                                label='Address:' 
+                                name='address' 
+                                type="text"
+                                value={data.address} 
+                                placeholder='Enter your Address...'
+                                onChange={setInputValue} 
+                            />
+                            <ErrorPrimary msg={errors.address} />
+                        </div>
+                        <div className='w-full'>
+                            <TextInputPrimary
+                                label='WhatsApp:' 
+                                name='whatsapp' 
+                                type="text"
+                                value={data.whatsapp} 
+                                placeholder='Enter your WhatsApp URL...'
+                                onChange={setInputValue} 
+                            />
+                        </div>
+                       
                         <TextInputPrimary
                             label='Twitter:' 
                             name='twitter' 
                             type="text"
                             value={data.twitter} 
                             placeholder='Enter your Twitter URL...'
-                            onChange={handleInput} 
+                            onChange={setInputValue} 
+                        />
+                         <TextInputPrimary
+                            label='Tiktok:' 
+                            name='tiktok' 
+                            type="text"
+                            value={data.tiktok} 
+                            placeholder='Enter your Tiktok URL...'
+                            onChange={setInputValue} 
                         />
                         <TextInputPrimary
                             label='Facebook:' 
@@ -176,7 +234,7 @@ export default function AppInfoEditModal({
                             type="text"
                             value={data.facebook} 
                             placeholder='Enter your Facebook URL...'
-                            onChange={handleInput} 
+                            onChange={setInputValue} 
                         />
                         <TextInputPrimary
                             label='Instagram:' 
@@ -184,12 +242,12 @@ export default function AppInfoEditModal({
                             type="text"
                             value={data.instagram} 
                             placeholder='Enter your Instagram URL...'
-                            onChange={handleInput} 
+                            onChange={setInputValue} 
                         />
                         <div className='w-full flex items-center justify-center pt-1'>
                             <ButtonSubmit 
                                 title='Submit' 
-                                isSubmit={isSubmit} 
+                                isSubmit={isSubmitting} 
                             />
                         </div>
                     </form>

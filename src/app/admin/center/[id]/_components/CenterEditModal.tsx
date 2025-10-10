@@ -49,8 +49,7 @@ export default function CenterEditModal({
         errors, 
         setInputValue, 
         validateForm, 
-        clearErrors, 
-        setError, 
+        clearErrors,  
         setNewImageFile,
         setIsSubmitting,
         isSubmitting,
@@ -256,7 +255,7 @@ export default function CenterEditModal({
                                 label='Latitude:'
                                 name='latitude'
                                 type="number"
-                                value={data.latitude}
+                                value={data.latitude ?? ""}
                                 placeholder='Latitude'
                                 onChange={setInputValue}
                             />

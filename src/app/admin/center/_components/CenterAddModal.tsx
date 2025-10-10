@@ -33,20 +33,16 @@ const variants: Variants = {
 interface CenterAddModalInterface {
     isModal: boolean;
     setIsModal: React.Dispatch<React.SetStateAction<boolean>>;
-    initialData?: CenterInterface; // Optional prop to pass existing center data for editing
 }
 
 // --- Refactored Component (Renamed to CenterAddModal) ---
 export default function CenterAddModal({
     isModal,
     setIsModal,
-    initialData = CenterEntity, // Use prop if provided, otherwise use default
 }: CenterAddModalInterface) {
     const {
-        data, 
-        setData, 
+        data,  
         setInputValue, 
-        setError, 
         errors,
         clearErrors, 
         validateForm, 
@@ -56,10 +52,6 @@ export default function CenterAddModal({
         setImageFile
     } = useCenterStore()
    
-    
-
-    
-
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
             e.preventDefault();
             // Clear previous errors
@@ -112,6 +104,7 @@ export default function CenterAddModal({
                 setIsSubmitting(false);
             }
     }
+    
 
     return (
         <>

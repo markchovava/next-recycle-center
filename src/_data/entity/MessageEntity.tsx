@@ -1,3 +1,17 @@
+export interface MessageInterface {
+    id: number,
+    userId: number,
+    email: string,
+    message: string,
+    name: string,
+    title: string,
+    status: string,
+    createdAt: string,
+    updatedAt: string,
+}
+
+
+
 export const MessageEntity = {
     id: 0,
     userId: 0,
@@ -5,6 +19,7 @@ export const MessageEntity = {
     message: "",
     name: "",
     title: "",
+    status: "",
     createdAt: "",
     updatedAt: ""
 }

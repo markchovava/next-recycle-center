@@ -3,6 +3,8 @@ import { MetaInterface, MetaLinksInterface } from '@/_data/entity/ResponseEntity
 import ButtonPaginate from '../buttons/ButtonPaginate'
 
 
+
+
 interface PaginationPrimaryInterface{
     links: MetaLinksInterface, 
     meta: MetaInterface,
@@ -16,8 +18,7 @@ export default function PaginationPrimary({
       handlePaginate
   }: PaginationPrimaryInterface
 ) {
-    const { prev, next } = links
-    const {per_page, total} = meta
+    const { prev, next } = links || { prev: null, next: null };
 
    
   return (

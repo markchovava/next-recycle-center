@@ -9,17 +9,23 @@ import { getTheCookie } from "@/_cookies/CookiesClient";
 import LoaderPrimary from "@/_components/loaders/LoaderPrimary";
 import { RolesData } from "@/_data/sample/RolesData";
 import { useAuthStore } from "@/_store/useAuthStore";
+import { AuthInterface } from "@/_data/entity/AuthEntity";
 
 
 
 
-export default function ProfileViewPage() {
-  const { data, preData, setData, fetchAuthCookie, isLoading } = useAuthStore()
-  const [role, setRole] = useState("");
+export default function ProfileViewPage({dbData}: {dbData: AuthInterface} ) {
+  const { data, preData, setData, fetchAuthCookie, isLoading, setRole } = useAuthStore()
   const [isModal, setIsModal] = useState<boolean>(false);
 
+
+  console.log(dbData)
+  
+
   useEffect(() => {
-    fetchAuthCookie();
+    setData(dbData)
+    setRole(dbData.roleLevel)
+
   }, []);
 
 

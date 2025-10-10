@@ -3,22 +3,24 @@ import ButtonPrimary from "@/_components/buttons/ButtonPrimary";
 import RecordPrimary from "@/_components/records/RecordPrimary";
 import SpacerTertiary from "@/_components/spacers/SpacerTertiary";
 import TitlePrimary from "@/_components/titles/TitlePrimary";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserEditModal from "./UserEditModal";
+import { UserInterface } from "@/_data/entity/UserEntity";
+import { useUserStore } from "@/_store/useUserStore";
+import { UserRole } from "@/_data/sample/RolesData";
 
 
-const UserData = {
-  name: "John Doe",
-  email: "john.doe@example.com",
-  phone: "+1 (555) 123-4567",
-  address: "123 Main St, Anytown, USA",
-  code: "1234567890",
-  isAdmin: true
+interface UserViewPageInterface{
+  id: string | number, 
+  dbData: UserInterface
 }
 
-export default function UserViewPage({ id }: { id: string | number }) {
-  const [data, setData] = useState(UserData)
+export default function UserViewPage({ id, dbData }: UserViewPageInterface) {
   const [isModal, setIsModal] = useState<boolean>(false)
+  const {data, preData, setData} = useUserStore()
+  useEffect(() => {
+    setData(dbData)
+  }, [])
 
   return (
     <>
@@ -30,16 +32,17 @@ export default function UserViewPage({ id }: { id: string | number }) {
       </div>
       <SpacerTertiary />
       <div className="bg-white drop-shadow p-6 flex flex-col items-start justify-center gap-4 rounded-xl">
-        <RecordPrimary label="Name:" value={data.name} />
-        <RecordPrimary label="Phone:" value={data.phone} />
-        <RecordPrimary label="Email:" value={data.email} />
-        <RecordPrimary label="Address:" value={data.address} />
-        <RecordPrimary label="Code:" value={data.code} />
-        <RecordPrimary label="Admin:" value={data.isAdmin ? "Yes" : "No"} />
+        <RecordPrimary label="Name:" value={preData.name ?? "Not yet added"} />
+        <RecordPrimary label="Phone:" value={preData.phone ?? "Not yet added"} />
+        <RecordPrimary label="Email:" value={preData.email ?? "Not yet added"} />
+        <RecordPrimary label="Address:" value={preData.address ?? "Not yet added"} />
+        <RecordPrimary label="Code:" value={preData.code ?? "Not yet added"} />
+        <RecordPrimary label="Admin:" value={preData.isAdmin ? "Yes" : "No"} />
+        <RecordPrimary label="Admin:" value={UserRole(preData.roleLevel) ?? "Not added yet."} />
       </div>
     </section>
 
-    <UserEditModal isModal={isModal} setIsModal={setIsModal} />
+    <UserEditModal id={id} isModal={isModal} setIsModal={setIsModal} />
     </>
   )
 }

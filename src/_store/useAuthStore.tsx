@@ -1,6 +1,8 @@
 "use client"
+import { _authViewAction } from "@/_actions/AuthActions";
 import { getTheCookie } from "@/_cookies/CookiesClient";
 import { AuthEntity, AuthInterface } from "@/_data/entity/AuthEntity";
+import { isAdminData } from "@/_data/sample/AdminData";
 import { RolesData } from "@/_data/sample/RolesData";
 import { validateEmail } from "@/_utils/FormValidation";
 import { create } from "zustand"
@@ -19,12 +21,14 @@ interface AuthStoreInterface{
         React.ChangeEvent<HTMLSelectElement>
     ) => void,
     setData: (data: AuthInterface) => void,
-    setIsSubmit: (isSubmit: boolean) => void,
+    setIsSubmitting: (isSubmit: boolean) => void,
     validateField: (name: string, value: string) => string,
     validateForm: () => { isValid: boolean; errors: AuthInterface },
     clearErrors: () => void,
     setError: (field: keyof AuthInterface, message: string) => void,
+    setRole: (level: string | number) => void,
     fetchAuthCookie: () => Promise<void>,
+    getData: () => Promise<void>
 }
 
 
@@ -68,9 +72,10 @@ export const useAuthStore = create<AuthStoreInterface>((set, get) => ({
         set({
             preData: data,
             data: data,
+            isLoading: false,
         })
     },
-    setIsSubmit: (isSubmit) => {
+    setIsSubmitting: (isSubmit) => {
         set((state) => ({
             data: {
                 ...state.data,
@@ -169,6 +174,15 @@ export const useAuthStore = create<AuthStoreInterface>((set, get) => ({
             }
         }));
     },
+    setRole: (level) => {
+        const role = RolesData.find((i) => i.value == Number(level))
+        if(role) {
+            set((state) => ({
+                data: {...state.data, role: role.name ?? ""},
+                preData: {...state.data, role: role.name ?? ""}
+            }))
+        }
+    },
     fetchAuthCookie: async () => {
         set({ isLoading: true });
         try {
@@ -192,7 +206,35 @@ export const useAuthStore = create<AuthStoreInterface>((set, get) => ({
             console.error("Failed to fetch or parse cookie data:", error);
             set({ isLoading: false });
         }
+    },
+    getData: async () => {
+        try {
+            const res = await _authViewAction();
+            if (res && res.data ) {
+                set({
+                    data: res.data,
+                    preData: res.data,
+                    isLoading: false,
+                });
+            } else {
+                set({
+                    data: AuthEntity,
+                    preData: AuthEntity,
+                    isLoading: false,
+                });
+            }
+        } catch (error) {
+            console.error(`Error: ${error}`);
+            set({
+                data: AuthEntity,
+                preData: AuthEntity,
+                isLoading: false,
+            });
+        }
     }
 }))
+
+
+
 
 

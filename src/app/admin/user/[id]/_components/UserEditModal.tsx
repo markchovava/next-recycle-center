@@ -7,6 +7,9 @@ import TitlePrimary from '@/_components/titles/TitlePrimary';
 import TextInputPrimary from '@/_components/forms/TextInputPrimary';
 import ButtonSubmit from '@/_components/buttons/ButtonSubmit';
 import SelectInputPrimary from '@/_components/forms/SelectInputPrimary';
+import { useUserStore } from '@/_store/useUserStore';
+import ErrorPrimary from '@/_components/forms/ErrorPrimary';
+import { _userStoreAction, _userUpdateAction } from '@/_actions/UserActions';
 
 
 
@@ -21,6 +24,7 @@ const variants: Variants = {
 
 
 interface UserEditModalInterface{
+    id: number | string,
     isModal: boolean,
     setIsModal: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -44,37 +48,60 @@ const RolesData = [
 ]
 
 export default function UserEditModal({
-        isModal, 
-        setIsModal
-    }: UserEditModalInterface
+    id,
+    isModal, 
+    setIsModal
+}: UserEditModalInterface
 ) {
-    const [data, setData] = useState(UserEntity)
-    const [isSubmit, setIsSubmit] = useState<boolean>(false)
+   const { 
+        data, 
+        errors, 
+        setInputValue, 
+        validateForm, 
+        clearErrors,  
+        setIsSubmitting,
+        isSubmitting,
+        setData,
+        getData,
+    } = useUserStore()
 
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement> | 
-      React.ChangeEvent<HTMLTextAreaElement> |
-      React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        setData({ ...data, [e.target.name]: e.target.value })
-    }
-
-    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        setIsSubmit(true)  
+        // Clear previous errors
+        clearErrors();
+        // Validate form using store
+        const validation = validateForm();
+        if (!validation.isValid) {
+            // Show the first error as toast
+            const firstError = validation.errors.name || validation.errors.phone ||
+                validation.errors.email || validation.errors.address
+            toast.warn(firstError);
+            return;
+        }
+        setIsSubmitting(true);
+        const formData = {
+            name: data.name,
+            phone: data.phone,
+            email: data.email,
+            address: data.address,
+            roleLevel: data.roleLevel
+        }
         try {
-            // Add your form submission logic here
-            console.log('Form data:', data);
-            
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            toast.success('Profile updated successfully!');
-            setIsModal(false);
+            const res = await _userUpdateAction(id, formData);
+            if (res.status === 1) {
+                toast.success(res.message);
+                await getData(id);
+                clearErrors();
+                setIsModal(false);
+            } else {
+                toast.error(res.message || 'Failed to update. Please try again.');
+                console.error('Server response:', res);
+            }
         } catch (error) {
-            toast.error('Failed to update profile. Please try again.');
+            toast.error('Failed to save data. Please try again.');
             console.error('Form submission error:', error);
         } finally {
-            setIsSubmit(false);
+            setIsSubmitting(false);
         }
     }
     
@@ -101,50 +128,59 @@ export default function UserEditModal({
                         <div className='w-full'>
                             <TitlePrimary title="Edit User" />
                         </div>
-                        <TextInputPrimary
-                            label='Name:' 
-                            name='name' 
-                            type="text"
-                            value={data.name} 
-                            placeholder='Enter your Name...'
-                            onChange={handleInput} 
-                        />
-                        <TextInputPrimary
-                            label='Email:' 
-                            name='email' 
-                            type="email"
-                            value={data.email} 
-                            placeholder='Enter your Email...'
-                            onChange={handleInput} 
-                        />
-                        <TextInputPrimary
-                            label='Phone Number:' 
-                            name='phone' 
-                            type="text"
-                            value={data.phone} 
-                            placeholder='Enter your Phone Number...'
-                            onChange={handleInput} 
-                        />
+                        <div className='w-full'>
+                            <TextInputPrimary
+                                label='Name:' 
+                                name='name' 
+                                type="text"
+                                value={data.name} 
+                                placeholder='Enter your Name...'
+                                onChange={setInputValue} 
+                            />
+                            <ErrorPrimary msg={errors.name} />
+                        </div>
+                         <div className='w-full'>
+                            <TextInputPrimary
+                                label='Email:' 
+                                name='email' 
+                                type="email"
+                                value={data.email} 
+                                placeholder='Enter your Email...'
+                                onChange={setInputValue} 
+                            />
+                            <ErrorPrimary msg={errors.email} />
+                         </div>
+                          <div className='w-full'>
+                            <TextInputPrimary
+                                label='Phone Number:' 
+                                name='phone' 
+                                type="text"
+                                value={data.phone} 
+                                placeholder='Enter your Phone Number...'
+                                onChange={setInputValue} 
+                            />
+                            <ErrorPrimary msg={errors.phone} />
+                          </div>
                         <TextInputPrimary
                             label='Address:' 
                             name='address' 
                             type="text"
                             value={data.address} 
                             placeholder='Enter your Address...'
-                            onChange={handleInput} 
+                            onChange={setInputValue} 
                         />
                         <SelectInputPrimary
                             label='Role:'
                             name='role'
                             value={data.role}
                             dbData={RolesData}
-                            onChange={handleInput}
+                            onChange={setInputValue}
                         />
 
                         <div className='w-full flex items-center justify-center pt-1'>
                             <ButtonSubmit 
                                 title='Submit' 
-                                isSubmit={isSubmit} 
+                                isSubmit={isSubmitting} 
                             />
                         </div>
                     </form>

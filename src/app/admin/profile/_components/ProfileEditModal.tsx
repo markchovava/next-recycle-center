@@ -9,6 +9,7 @@ import ButtonSubmit from '@/_components/buttons/ButtonSubmit';
 import { _profileStoreAction } from '@/_actions/ProfileActions';
 import { useAuthStore } from '@/_store/useAuthStore';
 import { setTheCookie, UserCookieName } from '@/_cookies/CookiesClient';
+import { _authStoreAction } from '@/_actions/AuthActions';
 
 
 
@@ -42,54 +43,51 @@ export default function ProfileEditModal({
         validateForm, 
         clearErrors, 
         setError, 
-        setIsSubmit,
-        setData
+        setIsSubmitting,
+        setData,
+        getData,
     } = useAuthStore()
 
 
-    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        // Clear previous errors
-        clearErrors();
-        // Validate form using store
-        const validation = validateForm();
-        if (!validation.isValid) {
-            // Show the first error as toast
-            const firstError = validation.errors.name || 
-                validation.errors.email || validation.errors.phone || 
-                validation.errors.address;
-            toast.warn(firstError);
-            return;
-        }
-        setIsSubmit(true);
-        const formData = {
-            name: data.name,
-            phone: data.phone,
-            email: data.email,
-            address: data.address,
-        }
-        try {
-            const res = await _profileStoreAction(formData);
-            if(res.status === 0){
-                setError('email', res.message);
-                toast.warn(res.message);
+     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+            e.preventDefault();
+            // Clear previous errors
+            clearErrors();
+            // Validate form using store
+            const validation = validateForm();
+            if (!validation.isValid) {
+                // Show the first error as toast
+                const firstError = validation.errors.name || validation.errors.phone ||
+                    validation.errors.email || validation.errors.address
+                toast.warn(firstError);
                 return;
             }
-            if(res.status === 1){
-                toast.success(res.message);
-                setData(res.data)
-                setTheCookie(UserCookieName, res.data)
-                clearErrors();
-                setIsModal(false);
+            setIsSubmitting(true);
+            const formData = {
+                name: data.name,
+                phone: data.phone,
+                email: data.email,
+                address: data.address,
+                roleLevel: data.roleLevel
             }
-        } catch (error) {
-            toast.error('Failed to update data. Please try again.');
-            console.error('Form submission error:', error);
-        } finally {
-            setIsSubmit(false);
+            try {
+                const res = await _authStoreAction(formData);
+                if (res.status === 1) {
+                    toast.success(res.message);
+                    await getData();
+                    clearErrors();
+                    setIsModal(false);
+                } else {
+                    toast.error(res.message || 'Failed to update. Please try again.');
+                    console.error('Server response:', res);
+                }
+            } catch (error) {
+                toast.error('Failed to save data. Please try again.');
+                console.error('Form submission error:', error);
+            } finally {
+                setIsSubmitting(false);
+            }
         }
-    }
-    
     return (
         <>
         <AnimatePresence>

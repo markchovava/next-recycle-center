@@ -6,12 +6,12 @@ export interface UserInterface{
     address: string,
     phone: string,
     roleLevel: number,
+    role: string,
     password: string,
     code: string,
     updatedAt: string,
     createdAt: string,
 }
-
 
 
 export const UserEntity = {
@@ -22,6 +22,7 @@ export const UserEntity = {
     address: "",
     phone: "",
     roleLevel: 0,
+    role: "",
     password: "",
     code: "",
     updatedAt: "",

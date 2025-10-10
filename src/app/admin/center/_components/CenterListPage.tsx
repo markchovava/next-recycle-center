@@ -1,10 +1,8 @@
 "use client"
 
-import ButtonPaginate from "@/_components/buttons/ButtonPaginate";
 import ButtonPrimary from "@/_components/buttons/ButtonPrimary";
 import SpacerTertiary from "@/_components/spacers/SpacerTertiary";
 import TitlePrimary from "@/_components/titles/TitlePrimary";
-import { CenterData } from "@/_data/sample/CenterData";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaDeleteLeft, FaEye } from "react-icons/fa6";
@@ -12,7 +10,7 @@ import { GoDotFill } from "react-icons/go";
 import { IoSearch } from "react-icons/io5";
 import CenterAddModal from "./CenterAddModal";
 import PaginationPrimary from "@/_components/pagination/PaginationPrimary";
-import { _centerDeleteAction, centerListAction } from "@/_actions/CenterActions";
+import { _centerDeleteAction } from "@/_actions/CenterActions";
 import { useCenterStore } from "@/_store/useCenterStore";
 import LoaderPrimary from "@/_components/loaders/LoaderPrimary";
 import NoDataPrimary from "@/_components/NoDataPrimary";
@@ -113,7 +111,7 @@ export default function CenterListPage({dbData}: {dbData: any}) {
             />
           </section>
 
-          { dataList.length > 0  ? 
+          { dataList && dataList.length > 0  ? 
             <section className="w-full lg:overflow-hidden overflow-scroll">
               <div className='lg:w-[100%] w-[70rem]'>
                   {/* HEADER */}

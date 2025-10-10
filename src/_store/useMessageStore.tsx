@@ -1,24 +1,25 @@
-import { _centerDeleteAction, _centerStoreAction, centerListAction, centerPaginateAction, centerSearchAction, centerViewAction } from "@/_actions/CenterActions";
-import { BaseURL } from "@/_api/BaseURL";
-import { CenterEntity, CenterInterface } from "@/_data/entity/CenterEntity";
-import { MetaEntity, MetaInterface, MetaLinksEntity, MetaLinksInterface, ResponseInterface } from "@/_data/entity/ResponseEntity";
+"use client"
+import { _messageListAction, _messagePaginateAction, _messageSearchAction, _messageViewAction } from "@/_actions/MessageActions";
+import { MetaEntity, MetaInterface, MetaLinksEntity, MetaLinksInterface } from "@/_data/entity/ResponseEntity";
+import { MessageEntity, MessageInterface } from "@/_data/entity/MessageEntity";
 import { create } from "zustand";
+
 
 
 interface DataListInterface{
     meta: MetaInterface,
     links: MetaLinksInterface
-    data: CenterInterface[]
+    data: MessageInterface[]
 }
 
 
-interface CenterStoreInterface{
-    data: CenterInterface,
-    preData: CenterInterface,
+interface MessageStoreInterface{
+    data: MessageInterface,
+    preData: MessageInterface,
+    dataList: MessageInterface[],
     message: string,
-    errors: CenterInterface,
+    errors: MessageInterface,
     isLoading: boolean,
-    dataList: CenterInterface[],
     isSearching: boolean,
     isSubmitting: boolean,
     search: string,
@@ -31,33 +32,29 @@ interface CenterStoreInterface{
         React.ChangeEvent<HTMLSelectElement>
     ) => void,
     setDataList: (data: DataListInterface) => void,
-    setImage: (img: string) => void,
-    setData: (data: CenterInterface) => void,
-    getData: (id: string | number) => void,
+    setData: (data: MessageInterface) => void,
     setMessage: (i: string) => void,
     setSearch: (e: React.ChangeEvent<HTMLInputElement>) => void,
     setIsSubmitting: (status: boolean) => void,
     setDelete: (id: number | string) => void,
     setUpdate: (id: number | string) => void,
-    setStore: (data: CenterInterface) => void,
-    validateField: (name: string, value: string) => string,
-    validateForm: () => { isValid: boolean; errors: CenterInterface },
+    setError: (field: keyof MessageInterface, message: string) => void,
+    setStore: (data: MessageInterface) => void,
+    validateField: (title: string, value: string) => string,
+    validateForm: () => { isValid: boolean; errors: MessageInterface },
     clearErrors: () => void,
-    setError: (field: keyof CenterInterface, message: string) => void,
+    getData: (id: string | number) => void,
     getDataList: () => Promise<void>,
     getPaginatedDataList: (url: string) => Promise<void>,
-    setImageFile: (file: File | null) => void,
-    setNewImageFile: (file: File | null) => void,
     getSearchDataList: (search: string) => void,
-
+    resetData: () => void
 }
 
-
-export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
-    data: CenterEntity,
-    preData: CenterEntity,
+export const useMessageStore = create<MessageStoreInterface>((set, get) => ({
+    data: MessageEntity,
+    preData: MessageEntity,
     message: "",
-    errors: CenterEntity,
+    errors: MessageEntity,
     meta: MetaEntity,
     links: MetaLinksEntity,
     isLoading: true,
@@ -70,40 +67,12 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
         set({
             message: msg
         })
-    },
-    setImage: (img) => {
-        set((state) => ({
-            data: {
-                ...state.data,
-                imageURL: img,
-            },
-            preData: {
-                ...state.preData,
-                imageURL: img
-            }
-        }))
-    },
+    },    
     setSearch: (e) => {
         const { value } = e.target;
         set({
             search: value
         })
-    },
-    setNewImageFile: (file) => {
-        set((state) => ({
-            data: {
-                ...state.data, 
-                newImage: file,
-            }
-        }))
-    },
-    setImageFile: (file) => {
-        set((state) => ({
-            data: {
-                ...state.data, 
-                image: file,
-            }
-        }))
     },
     setInputValue: (e) => {
         const { name, value } = e.target;
@@ -139,42 +108,22 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
     setIsSubmitting: (status) => {
         set({isSubmitting: status})
     },
-    validateField: (name, value) => {
+    validateField: (title, value) => {
         let error = ""
-        switch(name){
-            case "name":
-                if(!value.trim()) {
-                    error = "Name is required.";
-                }
-                break;
-            case "phone":
-                if(!value.trim()) {
-                    error = "Phone is required.";
-                }
-                break;
+        switch(title){
             case "email":
-                if(!value.trim()){
+                if(!value.trim()) {
                     error = "Email is required.";
-                } 
-                break;
-            case "address":
-                if (!value.trim()) {
-                    error = "Address is required.";
                 }
                 break;
-            case "city":
-                if (!value.trim()) {
-                    error = "City is required.";
+            case "title":
+                if(!value.trim()) {
+                    error = "Title is required.";
                 }
                 break;
-            case "province":
-                if (!value.trim()) {
-                    error = "Province is required.";
-                }
-                break;
-            case "description":
-                if(!value.trim()){
-                    error = "Description is required.";
+            case "message":
+                if(!value.trim()) {
+                    error = "Message is required.";
                 }
                 break;
             default:
@@ -184,51 +133,26 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
     },
     validateForm: () => { 
         const { data } = get();
-        let errors = { ...CenterEntity };
+        let errors = { ...MessageEntity };
         let hasError = false;
-        // Validate name
-        const nameError = get().validateField("name", data.name);
-        if (nameError) {
-            errors.name = nameError;
-            hasError = true;
-        }
-        // Validate PHONE
-        const phoneError = get().validateField("phone", data.phone);
-        if (phoneError) {
-            errors.phone = phoneError;
-            hasError = true;
-        }
-        // Validate PHONE
+        // Validate title
         const emailError = get().validateField("email", data.email);
         if (emailError) {
             errors.email = emailError;
             hasError = true;
         }
-        // Validate Email
-        const addressError = get().validateField("address", data.address);
-        if (addressError) {
-            errors.address = addressError;
+        // Validate title
+        const titleError = get().validateField("title", data.title);
+        if (titleError) {
+            errors.title = titleError;
             hasError = true;
         }
-        // Validate City
-        const cityError = get().validateField("city", data.city);
-        if (cityError) {
-            errors.city = cityError;
+        // Validate PHONE
+        const messageError = get().validateField("message", data.message);
+        if (messageError) {
+            errors.message = messageError;
             hasError = true;
         }
-         // Validate Province
-        const provinceError = get().validateField("province", data.province);
-        if (provinceError) {
-            errors.province = provinceError;
-            hasError = true;
-        }
-        // Validate Description
-        const descriptionError = get().validateField("description", data.description);
-        if (descriptionError) {
-            errors.description = descriptionError;
-            hasError = true;
-        }
-       
         set({ errors });
         return {
             isValid: !hasError,
@@ -236,7 +160,7 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
         };
     },
     clearErrors: () => {
-        set({ errors: CenterEntity })
+        set({ errors: MessageEntity })
     },
     setError: (field, message) => {
         set((state) => ({
@@ -252,7 +176,7 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
     getDataList: async () => {
         set({ isLoading: true });
         try {
-            const res = await centerListAction();
+            const res = await _messageListAction();
             // Check if response has the expected structure
             if (res && res.data && res.meta && res.links) {
                 set({
@@ -283,7 +207,7 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
     getData: async (id) => {
         set({ isLoading: true });
         try {
-            const res = await centerViewAction(id);
+            const res = await _messageViewAction(id);
             // Check if response has the expected structure
             if (res && res.data ) {
                 set({
@@ -291,26 +215,19 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
                     preData: res.data,
                     isLoading: false,
                 });
-                if(res.data.image){
-                    const img = BaseURL + res.data.image
-                    set((state) => ({
-                        data: {...state.data, imagURL: img},
-                        preData: {...state.data, imageURL: img}
-                    }))
-                }
             } else {
                 // Fallback if structure is different
                 set({
-                    data: CenterEntity,
-                    preData: CenterEntity,
+                    data: MessageEntity,
+                    preData: MessageEntity,
                     isLoading: false,
                 });
             }
         } catch (error) {
             console.error(`Error: ${error}`);
             set({
-                data: CenterEntity,
-                preData: CenterEntity,
+                data: MessageEntity,
+                preData: MessageEntity,
                 isLoading: false,
             });
         }
@@ -318,7 +235,7 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
     getPaginatedDataList: async (url) => {
         set({ isLoading: true });
         try {
-            const res = await centerPaginateAction(url);
+            const res = await _messagePaginateAction(url);
             // Check if response has the expected structure
             if (res && res.data && res.meta && res.links) {
                 set({
@@ -349,7 +266,7 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
     getSearchDataList: async (search) => {
         set({ isSearching: true });
         try {
-            const res = await centerSearchAction(search);
+            const res = await _messageSearchAction(search);
             // Check if response has the expected structure
             if (res && res.data && res.meta && res.links) {
                 set({
@@ -377,6 +294,10 @@ export const useCenterStore = create<CenterStoreInterface>((set, get) =>({
             });
         }
     },
-   
+    resetData: () => {
+        set({
+            data: MessageEntity,
+        })
+    },
 
-}))
+})) 

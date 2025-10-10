@@ -1,10 +1,9 @@
-"use client"
-
 import BreadCrumbs from "@/_components/breadcrumbs/BreadCrumbs"
 import HeaderPrimary from "@/_components/headers/HeaderPrimary"
 import SpacerPrimary from "@/_components/spacers/SpacerPrimary"
 import SpacerSecondary from "@/_components/spacers/SpacerSecondary"
 import ProfileViewPage from "./_components/ProfileViewPage"
+import { _authViewAction } from "@/_actions/AuthActions"
 
 
 
@@ -16,7 +15,8 @@ const BreadCrumbsData = [
 ]
 
 
-export default function Page() {
+export default async function Page() {
+  const [ authData ] = await Promise.all([_authViewAction()]);
 
   return (
     <>
@@ -24,7 +24,7 @@ export default function Page() {
         <BreadCrumbs dbData={BreadCrumbsData} />
         
         <SpacerSecondary />
-        <ProfileViewPage />
+        <ProfileViewPage dbData={authData.data} />
 
         <SpacerPrimary />       
     </>

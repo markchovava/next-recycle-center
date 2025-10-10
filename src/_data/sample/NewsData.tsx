@@ -1,4 +1,12 @@
 
+
+export const NewsStatusData = [
+    'Published',
+    'Draft',
+    'Archived'
+]
+
+
 export const NewsData = [
     {
         id: 1,
