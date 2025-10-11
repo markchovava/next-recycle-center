@@ -8,7 +8,8 @@ export interface AuthInterface{
     role: string,
     isSubmit: boolean,
     code: string,
-    isAdmin: number
+    isAdmin: number,
+    password: string,
 }
 
 
@@ -19,6 +20,7 @@ export const AuthEntity = {
     phone: "",
     address: "",
     roleLevel: 0,
+    password: "",
     role: "",
     isSubmit: false,
     code: "",

@@ -23,8 +23,9 @@ export async function registerAction(data: any) {
 
 export async function loginAction(data: any) {
     const res = await fetch(`${BaseURL}login`, {
-        "mode": "no-cors",
+        //"mode": "no-cors",
         'method': 'POST',
+        credentials: 'include',
         body: JSON.stringify(data),
         headers: {
             'Accept': 'application/json',

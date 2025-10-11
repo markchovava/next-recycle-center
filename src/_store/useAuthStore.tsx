@@ -30,7 +30,7 @@ interface AuthStoreInterface{
     fetchAuthCookie: () => Promise<void>,
     getData: () => Promise<void>
 }
-
+ 
 
 export const useAuthStore = create<AuthStoreInterface>((set, get) => ({
     preData: AuthEntity,

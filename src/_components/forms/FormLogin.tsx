@@ -9,8 +9,9 @@ import { AuthEntity } from "@/_data/entity/AuthEntity"
 import { loginAction } from "@/_actions/AuthActions"
 import { useRouter } from "next/navigation"
 import { AuthTokenCookieName, setTheCookie, UserCookieName } from "@/_cookies/CookiesClient"
+import { BaseURL } from "@/_api/BaseURL"
 
-
+ 
 
 export default function FormLogin() {
     const router = useRouter()
@@ -27,6 +28,20 @@ export default function FormLogin() {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         return emailRegex.test(email)
     }
+
+    async function getCsrfToken() {
+    try {
+        await fetch(`${BaseURL}sanctum/csrf-cookie`, {
+            method: 'GET',
+            credentials: 'include', // Important!
+            headers: {
+                'Accept': 'application/json',
+            }
+        });
+    } catch (error) {
+        console.error('Failed to get CSRF token:', error);
+    }
+}
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -59,9 +74,12 @@ export default function FormLogin() {
             email: data.email,
             password: data.password
         }
+
+        await getCsrfToken();
         try {
             //  API call
             const res = await loginAction(formData)
+            console.log(res)
             if(res.status === 0) {
                 toast.warn(res.message)
                 setErrMsg({...errMsg, email: res.message})
