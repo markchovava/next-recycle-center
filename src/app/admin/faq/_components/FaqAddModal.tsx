@@ -83,7 +83,7 @@ export default function FaqAddModal({
             }
     }
     
-    return (
+    return ( 
         <>
         <AnimatePresence>
             {isModal &&

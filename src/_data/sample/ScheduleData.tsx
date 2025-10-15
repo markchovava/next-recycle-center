@@ -92,3 +92,30 @@ export const ScheduleData = [
     updatedAt: "06 September 2024",
   },
 ];
+
+
+export const ScheduleCustomerStatusData = [
+  "Requested", 
+  "Collected",
+]
+
+
+
+export const ScheduleNavData = [
+    {
+        id: 1, 
+        title: "Customer", 
+        href: "/admin/schedule/customer",
+        desc: "The service recepient.", 
+        iconType: "user", 
+        css: "text-green-600"
+    },
+    {
+        id: 3, 
+        title: "Recyclers", 
+        href: "/admin/schedule/recycler",
+        desc: "The service provider.", 
+        iconType: "users", 
+        css: "text-blue-600"
+    },
+]

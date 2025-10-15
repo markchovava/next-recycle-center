@@ -9,8 +9,6 @@ import TextInputPrimary from '@/_components/forms/TextInputPrimary';
 import ButtonSubmit from '@/_components/buttons/ButtonSubmit';
 import TextAreaPrimary from '@/_components/forms/TextAreaPrimary';
 import TitleSecondary from '@/_components/titles/TitleSecondary';
-import { CenterEntity, CenterInterface } from '@/_data/entity/CenterEntity';
-import { useAuthStore } from '@/_store/useAuthStore';
 import { useCenterStore } from '@/_store/useCenterStore';
 import ImageInputPrimary from '@/_components/forms/ImageInputPrimary';
 import ErrorPrimary from '@/_components/forms/ErrorPrimary';
@@ -61,10 +59,8 @@ export default function CenterEditModal({
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        
         // Clear previous errors
         clearErrors();
-        
         // Validate form using store
         const validation = validateForm();
         if (!validation.isValid) {
@@ -75,15 +71,9 @@ export default function CenterEditModal({
             toast.warn(firstError);
             return;
         }
-        
         setIsSubmitting(true);
-
-        console.log('Form data before submission:', data);
-        console.log('New image file:', data.newImage);
-
         try {
-            const formData = new FormData(); // Fixed: Added parentheses
-            
+            const formData = new FormData();
             formData.append("name", data.name);
             formData.append("phone", data.phone);
             formData.append("email", data.email);
@@ -104,12 +94,11 @@ export default function CenterEditModal({
             if (data.newImage && data.newImage instanceof File) {
                 formData.append("image", data.newImage);
             }
-            
             // Debug: Log FormData contents
-            console.log('FormData entries:');
+            /* console.log('FormData entries:');
             for (let pair of formData.entries()) {
                 console.log(pair[0], pair[1]);
-            }
+            } */
             
             const res = await _centerUpdateAction(id, formData);
             
@@ -254,7 +243,7 @@ export default function CenterEditModal({
                                 <TextInputPrimary
                                 label='Latitude:'
                                 name='latitude'
-                                type="number"
+                                type="text"
                                 value={data.latitude ?? ""}
                                 placeholder='Latitude'
                                 onChange={setInputValue}
@@ -262,7 +251,7 @@ export default function CenterEditModal({
                             <TextInputPrimary
                                 label='Longitude:'
                                 name='longitude'
-                                type="number"
+                                type="text"
                                 value={data.longitude}
                                 placeholder='Longitude'
                                 onChange={setInputValue}

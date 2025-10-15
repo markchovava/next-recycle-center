@@ -1,13 +1,14 @@
 import BreadCrumbs from "@/_components/breadcrumbs/BreadCrumbs"
 import HeaderPrimary from "@/_components/headers/HeaderPrimary"
 import SpacerPrimary from "@/_components/spacers/SpacerPrimary"
+import ScheduleListPage from "./_components/ScheduleListPage"
 import SpacerSecondary from "@/_components/spacers/SpacerSecondary"
-import SchedulePage from "./_components/SchedulePage"
 
 const BreadCrumbsData = [
     {id: 1, name: "Home", href:"/"},
     {id: 2, name: "Dashboard", href:"/admin"},
     {id: 3, name: "Schedule", href:"/admin/schedule"},
+    {id: 3, name: "Recycler Schedule", href:"/admin/schedule/recycler"},
 ]
 
 export default function page() {
@@ -17,7 +18,7 @@ export default function page() {
     <BreadCrumbs dbData={BreadCrumbsData} />
 
     <SpacerSecondary />
-    <SchedulePage />
+    <ScheduleListPage />
     
     <SpacerPrimary /> 
     </>

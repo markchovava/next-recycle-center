@@ -13,6 +13,7 @@ import { useCenterStore } from "@/_store/useCenterStore";
 import LoaderPrimary from "@/_components/loaders/LoaderPrimary";
 import { BaseURL } from "@/_api/BaseURL";
 import ImagePrimary from "@/_components/images/ImagePrimary";
+import { formatDate } from "@/_utils/formatDate";
 
 
 
@@ -45,19 +46,15 @@ export default function CenterViewPage({ id, dbData }: CenterViewPageInterface )
   const [isModal, setIsModal] = useState(false);
 
 
-  /* console.log(id, dbData)
-  console.log("IMAGE: ", preData.image)
-  console.log("IMAGE URL: ", preData.imageURL) */
-
   if (isLoading) {
-          return (
-            <section className="w-[92%] mx-auto">
-              <TitlePrimary title='View Recycle Center' />
-              <SpacerTertiary />
-              <LoaderPrimary />
-            </section>
-          );
-      }
+        return (
+          <section className="w-[92%] mx-auto">
+            <TitlePrimary title='View Recycle Center' />
+            <SpacerTertiary />
+            <LoaderPrimary />
+          </section>
+        );
+    }
 
   // Handle case where no center is found
   if (!preData) {
@@ -69,11 +66,14 @@ export default function CenterViewPage({ id, dbData }: CenterViewPageInterface )
     );
   }
 
+
+  console.log('preData: ', preData)
+
   return (
     <>
       <section className="w-[92%] mx-auto">
         <SpacerTertiary />
-        <TitlePrimary title={`View Center: ${data.name ?? ""}`} />
+        <TitlePrimary title={`View Center: ${preData.name ?? ""}`} />
         <SpacerTertiary />
         <div className="flex items-center justify-end">
           {/* Note: In a real app, you would pass setData and data to the modal for update */}
@@ -98,8 +98,12 @@ export default function CenterViewPage({ id, dbData }: CenterViewPageInterface )
             <RecordPrimary label="Name:" value={preData.name ?? "Not Added yet."} />
             <RecordPrimary label="Phone:" value={preData.phone ?? "Not Added yet."} />
             <RecordPrimary label="Email:" value={preData.email ?? "Not Added yet."} />
-            <RecordPrimary label="Created On:" value={preData.createdAt ?? "Not Added yet."} />
-            <RecordPrimary label="Last Updated:" value={preData.updatedAt ?? "Not Added yet."} />
+            <RecordPrimary 
+              label="Created On:" 
+              value={preData.createdAt ? formatDate(preData.createdAt) : "Not Added yet."} />
+            <RecordPrimary 
+              label="Last Updated:" 
+              value={preData.updatedAt ? formatDate(preData.updatedAt) : "Not Added yet."} />
           </div>
           <BorderPrimary />
 

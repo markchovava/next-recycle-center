@@ -29,7 +29,7 @@ export default function SelectInputSecondary({
             name={name}
             onChange={onChange}
             className='w-full px-3 py-2 rounded-lg outline-none border border-gray-300 focus:border-gray-500 ease-initial duration-200 transition-all'>
-                <option value="" disabled>Select an option</option>
+                <option value="">Select an option</option>
                 {dbData.map((i, key) => (
                     <option key={key} value={i}>{i}</option>
                 ))}

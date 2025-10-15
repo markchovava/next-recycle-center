@@ -63,11 +63,8 @@ const AppInfoEntity = {
     facebook: "",
 }
 
-export default function AppInfoEditModal({
-        isModal, 
-        setIsModal
-    }: AppEditEditModalInterface
-) {
+export default function AppInfoEditModal({isModal, setIsModal}: AppEditEditModalInterface) 
+{
     const {
         setData, 
         getData,
@@ -103,7 +100,7 @@ export default function AppInfoEditModal({
             description: data.description,
             website: data.website,
             facebook: data.facebook,
-            tiktok: data.twitter,
+            tiktok: data.tiktok,
             instagram: data.instagram,
             whatsapp: data.whatsapp,
             twitter: data.twitter,

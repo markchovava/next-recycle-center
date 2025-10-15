@@ -92,34 +92,32 @@ export default function FaqListPage({ dbData }: { dbData: any }) {
 
 
       
-            {/* Search Bar */}
-            <section className="flex lg:flex-row flex-col items-center justify-between gap-4 mb-4">
-              <form onSubmit={handleSearch} className="lg:w-[60%] w-full flex items-center justify-start rounded-lg border border-gray-300">
-                <input 
-                  type="text" 
-                  placeholder="Enter Name" 
-                  value={search}
-                  onChange={setSearch}
-                  className="flex-1 py-2 px-4 outline-none rounded-l-full" 
-                />
-                <button type="submit" className="group px-6 py-2 border-l border-gray-300 rounded-r-full">
-                  {isSearching ? 
-                  <GoDotFill className="cursor-pointer text-2xl animate-pulse text-gray-900" />
-                  :
-                    <IoSearch className="cursor-pointer text-xl text-gray-500 transition-all ease-initial duration-200 group-hover:text-gray-900 group-hover:scale-110" />
-                  }
-                </button>
-              </form>
-              <ButtonPrimary
-                onClick={() => setIsModal(!isModal)}
-                title='Add'
-                css="px-8 py-2"  
-              />
-            </section>
-
-
+        {/* Search Bar */}
+        <section className="flex lg:flex-row flex-col items-center justify-between gap-4 mb-4">
+          <form onSubmit={handleSearch} className="lg:w-[60%] w-full flex items-center justify-start rounded-lg border border-gray-300">
+            <input 
+              type="text" 
+              placeholder="Enter Name" 
+              value={search}
+              onChange={setSearch}
+              className="flex-1 py-2 px-4 outline-none rounded-l-full" 
+            />
+            <button type="submit" className="group px-6 py-2 border-l border-gray-300 rounded-r-full">
+              {isSearching ? 
+              <GoDotFill className="cursor-pointer text-2xl animate-pulse text-gray-900" />
+              :
+                <IoSearch className="cursor-pointer text-xl text-gray-500 transition-all ease-initial duration-200 group-hover:text-gray-900 group-hover:scale-110" />
+              }
+            </button>
+          </form>
+          <ButtonPrimary
+            onClick={() => setIsModal(!isModal)}
+            title='Add'
+            css="px-8 py-2"  
+          />
+        </section>
         
-         { dataList && dataList.length > 0  ? 
+        { dataList && dataList.length > 0  ? 
           <section className="w-full lg:overflow-hidden overflow-scroll">
             <div className='lg:w-[100%] w-[70rem]'>
     
