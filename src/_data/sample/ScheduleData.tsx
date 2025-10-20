@@ -99,12 +99,18 @@ export const ScheduleCustomerStatusData = [
   "Collected",
 ]
 
+export const ScheduleRecyclerStatusData = [
+  "Received", 
+  'In-Transit',
+  "Collected",
+]
+
 
 
 export const ScheduleNavData = [
     {
         id: 1, 
-        title: "Customer", 
+        title: "All Customers", 
         href: "/admin/schedule/customer",
         desc: "The service recepient.", 
         iconType: "user", 
@@ -112,7 +118,7 @@ export const ScheduleNavData = [
     },
     {
         id: 3, 
-        title: "Recyclers", 
+        title: "All Recyclers", 
         href: "/admin/schedule/recycler",
         desc: "The service provider.", 
         iconType: "users", 

@@ -52,11 +52,11 @@ export async function _scheduleOfCustomerStoreAction(data: any) {
     return await res.json();
 }
 
-export async function _scheduleOfRecyclerStoreAction(data: any) {
+export async function _scheduleOfRecyclerUpdateAction(id: number | string, data: any) {
     const cookieStore = await cookies();
     const authToken = await cookieStore.get('RECYCLEMATE_AUTH_TOKEN_COOKIE');
     if(!authToken?.value){ redirect('/login'); }
-    const res = await fetch(`${BaseURL}api/schedule-of-recycler`, {
+    const res = await fetch(`${BaseURL}api/schedule-of-recycler/${id}`, {
       'method': 'POST',
       'body': JSON.stringify(data),
       headers: {
@@ -65,6 +65,7 @@ export async function _scheduleOfRecyclerStoreAction(data: any) {
         'Content-Type': 'application/json',
       }
     });
+    revalidatePath(`/admin/schedule/recycler/${id}`);
     return await res.json();
 }
 

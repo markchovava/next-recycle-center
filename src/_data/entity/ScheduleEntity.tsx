@@ -56,30 +56,3 @@ export const ScheduleEntity = {
 
 
 
-export const ScheduleErrorEntity = {
-    id: 0,
-    createdAt: "",
-    updatedAt: "",
-    // --------- CENTER ------------
-    centerId: "",
-    centerName: "",
-    centerPhone: "",
-    centerAddress: "",
-    // --------- CUSTOMER ------------
-    customerId: 0,
-    customerName: "",
-    customerAddress: "",
-    customerPhone: "",
-    requestTime: "",
-    requestDate: "",
-    customerStatus: "",
-    // --------- RECYCLER ------------
-    recyclerId: 0,
-    recyclerName: "",
-    recyclerAddress: "",
-    recyclerPhone: "",
-    recyclerStatus: "",
-    collectionDate: "",
-    collectionTime: "",
-}
-

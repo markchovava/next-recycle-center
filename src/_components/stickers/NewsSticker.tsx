@@ -5,9 +5,11 @@ export default function NewsSticker({status}: {status: string}) {
         switch (status) {
             case "Published":
                 return "bg-green-700";
+            case "Requested":
+                return "bg-blue-700";
             case "Draft":
                 return "bg-blue-700";
-            case "Review": // Assuming this was the intended third case
+            case "Review":
                 return "bg-yellow-700";
             case "Archived":
                 return "bg-gray-700";
@@ -18,7 +20,7 @@ export default function NewsSticker({status}: {status: string}) {
     })(); 
 
   return (
-    <span className={`${css} rounded-full text-sm bg-green-700 text-white py-0.5 px-1.5`}>
+    <span className={`${css} rounded-full text-sm text-white py-0.5 px-1.5`}>
         {status}
     </span>
   )

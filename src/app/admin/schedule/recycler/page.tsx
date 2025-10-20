@@ -1,8 +1,11 @@
 import BreadCrumbs from "@/_components/breadcrumbs/BreadCrumbs"
 import HeaderPrimary from "@/_components/headers/HeaderPrimary"
 import SpacerPrimary from "@/_components/spacers/SpacerPrimary"
-import ScheduleListPage from "./_components/ScheduleListPage"
 import SpacerSecondary from "@/_components/spacers/SpacerSecondary"
+import { _scheduleOfRecyclerIndexAction } from "@/_actions/ScheduleActions"
+import RecyclerScheduleListPage from "./_components/RecycleScheduleListPage"
+
+
 
 const BreadCrumbsData = [
     {id: 1, name: "Home", href:"/"},
@@ -11,14 +14,19 @@ const BreadCrumbsData = [
     {id: 3, name: "Recycler Schedule", href:"/admin/schedule/recycler"},
 ]
 
-export default function page() {
+
+export default async function page() {
+    const [ scheduleData ] = await Promise.all([ 
+          _scheduleOfRecyclerIndexAction()
+    ]);
+  
   return (
     <>
     <HeaderPrimary />
     <BreadCrumbs dbData={BreadCrumbsData} />
 
     <SpacerSecondary />
-    <ScheduleListPage />
+    <RecyclerScheduleListPage dbData={scheduleData} />
     
     <SpacerPrimary /> 
     </>

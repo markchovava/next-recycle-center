@@ -17,6 +17,7 @@ import { ScheduleCustomerStatusData } from '@/_data/sample/ScheduleData';
 import { useScheduleStore } from '@/_store/useScheduleStore';
 import ErrorPrimary from '@/_components/forms/ErrorPrimary';
 import ButtonClose from '@/_components/buttons/ButtonClose';
+import { _scheduleOfCustomerStoreAction } from '@/_actions/ScheduleActions';
 
 
 
@@ -37,7 +38,7 @@ interface ScheduleAddModalInterface{
 
 
 
-export default function ScheduleAddModal({
+export default function CustomerScheduleAddModal({
         centerData,
         isModal, 
         setIsModal
@@ -51,7 +52,8 @@ export default function ScheduleAddModal({
         resetData,
         validateCustomerForm,
         errors,
-        setError
+        setError,
+        getScheduleOfCustomerDataList
     } = useScheduleStore()
     const [centerList, setCenterList] = useState(
         centerData.length > 0 
@@ -70,7 +72,6 @@ export default function ScheduleAddModal({
         e.preventDefault();
         const validation = validateCustomerForm();
         if (!validation.isValid) {
-            // Show the first error as toast
             const firstError = validation.errors.requestDate ||
                 validation.errors.requestTime ||
                 validation.errors.centerId || 
@@ -93,9 +94,6 @@ export default function ScheduleAddModal({
                 centerAddress = center.address
             }
         }
-        console.log("centerName: ", centerName)
-        console.log("centerPhone: ", centerPhone)
-        console.log("centerAddress: ", centerAddress)
         setIsSubmitting(true) 
         const formData = {
             customerName: data.customerName,
@@ -109,16 +107,23 @@ export default function ScheduleAddModal({
             centerPhone: centerPhone,
             centerAddress: centerAddress
         } 
-        
         console.log("Form Data: ", formData)
         try {
             // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            toast.success('Data saved successfully.');
-            setIsModal(false);
+            console.log("Submitting to API...");
+            const res = await _scheduleOfCustomerStoreAction(formData);
+            console.log("API Response:", res);
+
+            if(res.status == 1) {
+                await getScheduleOfCustomerDataList()
+                toast.success(res.message);
+                setIsModal(false);
+                return
+            }
+            toast.error('Something went wrong. Please try again.');
+            return
         } catch (error) {
-            toast.error('Failed to update profile. Please try again.');
+            toast.error('Failed to add Data. Please try again.');
             console.error('Form submission error:', error);
         } finally {
             setIsSubmitting(false);
