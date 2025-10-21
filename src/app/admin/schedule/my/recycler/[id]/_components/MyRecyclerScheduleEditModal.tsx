@@ -37,7 +37,7 @@ interface ScheduleEditModalInterface{
 
 
 
-export default function ScheduleEditModal({
+export default function MyRecyclerScheduleEditModal({
         id,
         isModal, 
         setIsModal
@@ -70,7 +70,7 @@ export default function ScheduleEditModal({
             toast.warn(firstError);
             return;
         }  
-     
+             
         setIsSubmitting(true) 
         const formData = {
             recyclerName: data.recyclerName,  

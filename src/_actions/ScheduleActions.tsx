@@ -6,11 +6,14 @@ import { redirect } from "next/navigation";
 
 
 
-export async function _scheduleOfCustomerIndexAction() {
+/* --------------------------------
+    CUSTOMER
+ -------------------------------- */
+export async function _scheduleByCustomerIndexAction() {
     const cookieStore = await cookies();
     const authToken = await cookieStore.get('RECYCLEMATE_AUTH_TOKEN_COOKIE');
     if(!authToken?.value){ redirect('/login'); }
-    const res = await fetch(`${BaseURL}api/schedule-of-customer`, {
+    const res = await fetch(`${BaseURL}api/schedule-by-customer`, {
       'method': 'GET',
       headers: {
         'Authorization': `Bearer ${authToken?.value}`,
@@ -21,11 +24,26 @@ export async function _scheduleOfCustomerIndexAction() {
     return await res.json();
 }
 
-export async function _scheduleOfRecyclerIndexAction() {
+export async function _scheduleByCustomerSearchAction(search: string) {
     const cookieStore = await cookies();
     const authToken = await cookieStore.get('RECYCLEMATE_AUTH_TOKEN_COOKIE');
     if(!authToken?.value){ redirect('/login'); }
-    const res = await fetch(`${BaseURL}api/schedule-of-recycler`, {
+    const res = await fetch(`${BaseURL}api/schedule-by-customer/${search}`, {
+      'method': 'GET',
+      headers: {
+        'Authorization': `Bearer ${authToken?.value}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    });
+    return await res.json();
+}
+
+export async function _scheduleOfCustomerIndexAction() {
+    const cookieStore = await cookies();
+    const authToken = await cookieStore.get('RECYCLEMATE_AUTH_TOKEN_COOKIE');
+    if(!authToken?.value){ redirect('/login'); }
+    const res = await fetch(`${BaseURL}api/schedule-of-customer`, {
       'method': 'GET',
       headers: {
         'Authorization': `Bearer ${authToken?.value}`,
@@ -52,6 +70,54 @@ export async function _scheduleOfCustomerStoreAction(data: any) {
     return await res.json();
 }
 
+/* --------------------------------
+    RECYCLER
+ -------------------------------- */
+export async function _scheduleByRecyclerIndexAction() {
+    const cookieStore = await cookies();
+    const authToken = await cookieStore.get('RECYCLEMATE_AUTH_TOKEN_COOKIE');
+    if(!authToken?.value){ redirect('/login'); }
+    const res = await fetch(`${BaseURL}api/schedule-by-recycler`, {
+      'method': 'GET',
+      headers: {
+        'Authorization': `Bearer ${authToken?.value}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    });
+    return await res.json();
+}
+
+export async function _scheduleByRecyclerSearchAction(search: string) {
+    const cookieStore = await cookies();
+    const authToken = await cookieStore.get('RECYCLEMATE_AUTH_TOKEN_COOKIE');
+    if(!authToken?.value){ redirect('/login'); }
+    const res = await fetch(`${BaseURL}api/schedule-by-recycler/${search}`, {
+      'method': 'GET',
+      headers: {
+        'Authorization': `Bearer ${authToken?.value}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    });
+    return await res.json();
+}
+
+export async function _scheduleOfRecyclerIndexAction() {
+    const cookieStore = await cookies();
+    const authToken = await cookieStore.get('RECYCLEMATE_AUTH_TOKEN_COOKIE');
+    if(!authToken?.value){ redirect('/login'); }
+    const res = await fetch(`${BaseURL}api/schedule-of-recycler`, {
+      'method': 'GET',
+      headers: {
+        'Authorization': `Bearer ${authToken?.value}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    });
+    return await res.json();
+}
+
 export async function _scheduleOfRecyclerUpdateAction(id: number | string, data: any) {
     const cookieStore = await cookies();
     const authToken = await cookieStore.get('RECYCLEMATE_AUTH_TOKEN_COOKIE');
@@ -68,6 +134,12 @@ export async function _scheduleOfRecyclerUpdateAction(id: number | string, data:
     revalidatePath(`/admin/schedule/recycler/${id}`);
     return await res.json();
 }
+
+
+
+
+
+
 
 export async function _scheduleRecyclerStatusUpdateAction(id: string | number, data: any) {
     const cookieStore = await cookies();

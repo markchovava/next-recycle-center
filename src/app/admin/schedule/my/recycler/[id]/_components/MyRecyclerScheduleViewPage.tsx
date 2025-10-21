@@ -4,12 +4,12 @@ import RecordPrimary from "@/_components/records/RecordPrimary";
 import SpacerTertiary from "@/_components/spacers/SpacerTertiary";
 import TitlePrimary from "@/_components/titles/TitlePrimary";
 import { useEffect, useState } from "react";
-import ScheduleEditModal from "./RecyclerScheduleEditModal";
 import { useScheduleStore } from "@/_store/useScheduleStore";
 import LoaderPrimary from "@/_components/loaders/LoaderPrimary";
 import StickerPrimary from "@/_components/stickers/StickerPrimary";
 import { formatDate } from "@/_utils/formatDate";
 import { ScheduleInterface } from "@/_data/entity/ScheduleEntity";
+import MyRecyclerScheduleEditModal from "./MyRecyclerScheduleEditModal";
 
 
 
@@ -24,7 +24,7 @@ const title = "View Schedule"
 /* ------------------------------ */
 
 
-export default function RecyclerScheduleViewPage({ id, dbData }: RecyclerScheduleInterface) {
+export default function MyRecyclerScheduleViewPage({ id, dbData }: RecyclerScheduleInterface) {
     const [isModal, setIsModal] = useState(false)
     const {data, preData, setData, isLoading} = useScheduleStore()
     useEffect(() => {
@@ -66,27 +66,22 @@ export default function RecyclerScheduleViewPage({ id, dbData }: RecyclerSchedul
         <RecordPrimary label="Center Address:" value={preData.centerAddress ?? "Not Added"} />   
         <RecordPrimary label="Collection Time:" value={preData.collectionTime ?? "Not Added"} /> 
         <RecordPrimary label="Collection Date:" value={preData.collectionDate ? formatDate(preData.collectionDate) : "Not Added"} /> 
-        {preData.recyclerName ?
-          <RecordPrimary label="Recycler Name:" value={preData.recyclerName ?? "Not Added"} /> 
-          : ""}
-        {preData.recyclerPhone ?
-          <RecordPrimary label="Recycler Phone:" value={preData.recyclerPhone ?? "Not Added"} /> 
-          : ""}
-        {preData.recyclerAddress ?
-          <RecordPrimary label="Recycler Address:" value={preData.recyclerAddress ?? "Not Added"} /> 
-          : ""}
-        {preData.recyclerStatus ?
-          <RecordPrimary 
+        <RecordPrimary label="Recycler Name:" value={preData.recyclerName ?? "Not Added"} /> 
+        <RecordPrimary label="Recycler Phone:" value={preData.recyclerPhone ?? "Not Added"} /> 
+        <RecordPrimary label="Recycler Address:" value={preData.recyclerAddress ?? "Not Added"} /> 
+        <RecordPrimary 
             label="Recycler Status:" 
             value={preData.recyclerStatus ? <StickerPrimary status={preData.recyclerStatus} /> : "Not Added"} /> 
-        : ""}
+       
       </div>
       <SpacerTertiary />
 
     </section>
 
-    {/* Note: The modal is only shown if isModal is true */}
-    <ScheduleEditModal id={id} isModal={isModal} setIsModal={setIsModal} />
+    <MyRecyclerScheduleEditModal 
+        id={id} 
+        isModal={isModal} 
+        setIsModal={setIsModal} />
     </>
   )
 }

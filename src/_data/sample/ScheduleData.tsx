@@ -117,11 +117,27 @@ export const ScheduleNavData = [
         css: "text-green-600"
     },
     {
-        id: 3, 
+        id: 2, 
         title: "All Recyclers", 
         href: "/admin/schedule/recycler",
         desc: "The service provider.", 
         iconType: "users", 
         css: "text-blue-600"
+    },
+    {
+        id: 3, 
+        title: "My Schedule", 
+        href: "/admin/schedule/my/customer",
+        desc: "For Customers.", 
+        iconType: "schedule", 
+        css: "text-rose-600"
+    },
+     {
+        id: 4, 
+        title: "My Schedule", 
+        href: "/admin/schedule/my/recycler",
+        desc: "For Recyclers.", 
+        iconType: "schedule", 
+        css: "text-cyan-600"
     },
 ]

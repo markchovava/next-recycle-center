@@ -1,15 +1,11 @@
 "use client"
 
 import { IoSettingsOutline } from "react-icons/io5"
-import { FaRegUser } from "react-icons/fa";
-import { MdRecycling } from "react-icons/md";
+import { MdRecycling, MdOutlineSchedule } from "react-icons/md";
 import { BsBuildings } from "react-icons/bs";
-import { FaRegNewspaper } from "react-icons/fa";
 import { BiHelpCircle } from "react-icons/bi";
-import { FaRegCalendarAlt } from "react-icons/fa";
-import { FaUsers } from "react-icons/fa";
+import { FaRegCalendarAlt, FaUsers, FaRegUser, FaRegNewspaper, FaQuoteLeft } from "react-icons/fa";
 import { BsInfoCircle } from "react-icons/bs";
-import { FaQuoteLeft } from "react-icons/fa";
 import { RiContactsLine } from "react-icons/ri";
 import { IoHelpBuoyOutline } from "react-icons/io5";
 import Link from "next/link";
@@ -33,6 +29,8 @@ export default function CardPrimary({dbData}: { dbData: CardPrimaryProps }) {
             <FaUsers className="text-[3.5rem]" /> : 
         iconType === "recycling" ?
             <MdRecycling className="text-[3.5rem]" /> : 
+        iconType === "schedule" ?
+            <MdOutlineSchedule className="text-[3.5rem]" /> : 
         iconType === "how-to" ?
             <IoHelpBuoyOutline className="text-[3.5rem]" /> : 
         iconType === "user" ?

@@ -1,23 +1,23 @@
 import BreadCrumbs from "@/_components/breadcrumbs/BreadCrumbs"
 import HeaderPrimary from "@/_components/headers/HeaderPrimary"
 import SpacerPrimary from "@/_components/spacers/SpacerPrimary"
-import CustomerScheduleListPage from "./_components/CustomerScheduleListPage"
 import SpacerSecondary from "@/_components/spacers/SpacerSecondary"
-import { _scheduleOfCustomerIndexAction } from "@/_actions/ScheduleActions"
+import { _scheduleByCustomerIndexAction } from "@/_actions/ScheduleActions"
 import { centerAllAction } from "@/_actions/CenterActions"
+import MyCustomerScheduleListPage from "./_components/MyCustomerScheduleListPage"
 
 
 const BreadCrumbsData = [
     {id: 1, name: "Home", href:"/"},
     {id: 2, name: "Dashboard", href:"/admin"},
     {id: 3, name: "Schedule", href:"/admin/schedule"},
-    {id: 3, name: "Customer Schedule", href:"/admin/schedule/customer"},
+    {id: 3, name: "My Schedule (Customer)", href:"/admin/schedule/my/customer"},
 ]
  
 
 export default async function page() {
   const [ scheduleData, centerData ] = await Promise.all([ 
-        _scheduleOfCustomerIndexAction(), 
+        _scheduleByCustomerIndexAction(), 
         centerAllAction() 
   ]);
 
@@ -28,7 +28,7 @@ export default async function page() {
     <BreadCrumbs dbData={BreadCrumbsData} />
 
     <SpacerSecondary />
-    <CustomerScheduleListPage 
+    <MyCustomerScheduleListPage 
         dbData={scheduleData} 
         centerData={centerData.data} />
     
