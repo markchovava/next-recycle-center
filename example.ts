@@ -79,3 +79,41 @@ export async function binNotificationSubmit(data: any) {
     
     return await res.json();
 }
+
+
+
+/* export interface CenterInterface{
+    id: number,
+    userId: number,
+    name: string,
+    phone: string,
+    email: string,
+    address: string,
+    longitude: string,
+    latitude: string,
+    description: string,
+    city: string,
+    province: string,
+    postalCode: string,
+    weekdayOpenTime: string,
+    weekdayCloseTime: string,
+    weekendOpenTime: string,
+    weekendCloseTime: string,
+    holidayOpenTime: string,
+    holidayCloseTime: string,
+    createdAt: string,
+    updatedAt: string,
+    image?: File | null,
+    newImage?: File | null,
+    imageURL?: string,
+    user: UserInterface
+} */
+
+/* return the following
+  RESPONSE data = {
+    message => 'Data saved successfully.',
+    status => 1,
+    data =>  CenterInterface
+
+ } */
+      
