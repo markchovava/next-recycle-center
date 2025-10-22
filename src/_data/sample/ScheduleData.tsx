@@ -126,7 +126,7 @@ export const ScheduleNavData = [
     },
     {
         id: 3, 
-        title: "My Schedule", 
+        title: "Customer Schedule", 
         href: "/admin/schedule/my/customer",
         desc: "For Customers.", 
         iconType: "schedule", 
@@ -134,7 +134,7 @@ export const ScheduleNavData = [
     },
      {
         id: 4, 
-        title: "My Schedule", 
+        title: "Recycler Schedule", 
         href: "/admin/schedule/my/recycler",
         desc: "For Recyclers.", 
         iconType: "schedule", 

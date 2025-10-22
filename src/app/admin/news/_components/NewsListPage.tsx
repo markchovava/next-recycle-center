@@ -5,7 +5,6 @@ import TitlePrimary from "@/_components/titles/TitlePrimary";
 import { useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 import { GoDotFill } from "react-icons/go";
-import ButtonPaginate from "@/_components/buttons/ButtonPaginate";
 import { FaEye } from "react-icons/fa";
 import { FaDeleteLeft } from "react-icons/fa6";
 import NewsAddModal from "./NewsAddModal";
@@ -19,6 +18,7 @@ import NoDataPrimary from "@/_components/NoDataPrimary";
 import { trimString } from "@/_utils/StringManipulation";
 import { formatDate } from "@/_utils/formatDate";
 import NewsSticker from "@/_components/stickers/NewsSticker";
+import { useAccessStore } from "@/_store/useAccessStore";
 
 
 
@@ -39,9 +39,11 @@ export default function NewsListPage({dbData}: any) {
         search,
         setSearch,
     } = useNewsStore()
+    const { currentUser, getUserCookie} = useAccessStore()
 
   
       useEffect(() => {
+        getUserCookie();
         setDataList(dbData)
       }, [])
 
@@ -107,11 +109,13 @@ export default function NewsListPage({dbData}: any) {
                 }
               </button>
             </form>
-            <ButtonPrimary
-              onClick={() => setIsModal(!isModal)}
-              title='Add'
-              css="px-8 py-2"  
-            />
+            {Number(currentUser.isAdmin) === 1 &&
+              <ButtonPrimary
+                onClick={() => setIsModal(!isModal)}
+                title='Add'
+                css="px-8 py-2"  
+              />
+            }
           </section>
 
           { dataList && dataList.length > 0  ?  
@@ -141,11 +145,13 @@ export default function NewsListPage({dbData}: any) {
                         <FaEye className="text-xl text-gray-800 group-hover:text-green-600 group-hover:scale-110 ease-initial transition-all duration-200" />
                       </Link>
                       </button>
-                      <button 
-                        onClick={() => handleDelete(i.id)} 
-                        className="cursor-pointer group">
-                        <FaDeleteLeft className="text-xl text-gray-800 group-hover:text-red-600 group-hover:scale-110 ease-initial transition-all duration-200" />
-                      </button>
+                      {Number(currentUser.isAdmin) === 1 &&
+                        <button 
+                          onClick={() => handleDelete(i.id)} 
+                          className="cursor-pointer group">
+                          <FaDeleteLeft className="text-xl text-gray-800 group-hover:text-red-600 group-hover:scale-110 ease-initial transition-all duration-200" />
+                        </button>
+                      }
                     </div>
                   </section>
                 ))}

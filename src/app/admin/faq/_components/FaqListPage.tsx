@@ -17,6 +17,7 @@ import { trimString } from "@/_utils/StringManipulation";
 import { formatDate } from "@/_utils/formatDate";
 import { useFaqStore } from "@/_store/useFaqStore";
 import NoDataPrimary from "@/_components/NoDataPrimary";
+import { useAccessStore } from "@/_store/useAccessStore";
 
 
 
@@ -40,8 +41,10 @@ export default function FaqListPage({ dbData }: { dbData: any }) {
         search,
         setSearch,
     } = useFaqStore()
+    const { currentUser, getUserCookie} = useAccessStore()
 
     useEffect(() => {
+      getUserCookie()
         setDataList(dbData)
     }, [])
 
@@ -110,11 +113,13 @@ export default function FaqListPage({ dbData }: { dbData: any }) {
               }
             </button>
           </form>
-          <ButtonPrimary
-            onClick={() => setIsModal(!isModal)}
-            title='Add'
-            css="px-8 py-2"  
+          {Number(currentUser.isAdmin) === 1 &&
+            <ButtonPrimary
+              onClick={() => setIsModal(!isModal)}
+              title='Add'
+              css="px-8 py-2"  
           />
+          }
         </section>
         
         { dataList && dataList.length > 0  ? 
@@ -143,11 +148,13 @@ export default function FaqListPage({ dbData }: { dbData: any }) {
                       <FaEye className="text-xl text-gray-800 group-hover:text-green-600 group-hover:scale-110 ease-initial transition-all duration-200" />
                     </Link>
                     </button>
-                    <button 
-                      onClick={() => handleDelete(i.id)}  
-                      className="cursor-pointer group">
-                      <FaDeleteLeft className="text-xl text-gray-800 group-hover:text-red-600 group-hover:scale-110 ease-initial transition-all duration-200" />
-                    </button>
+                    {Number(currentUser.isAdmin) === 1 &&
+                      <button 
+                        onClick={() => handleDelete(i.id)}  
+                        className="cursor-pointer group">
+                        <FaDeleteLeft className="text-xl text-gray-800 group-hover:text-red-600 group-hover:scale-110 ease-initial transition-all duration-200" />
+                      </button>
+                    }
                   </div>
                 </section>
               ))}

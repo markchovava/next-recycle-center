@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import GettingStartedEditModal from "./GettingStartedEditModal";
 import { GettingStartedInterface } from "@/_data/entity/GettingStartedEntity";
 import { useGettingStartedStore } from "@/_store/useGettingStartedStore";
+import { useAccessStore } from "@/_store/useAccessStore";
 
 
 interface GettingStartedViewPageInterface{
@@ -17,7 +18,9 @@ interface GettingStartedViewPageInterface{
 export default function GettingStartedViewPage({ id, dbData }: GettingStartedViewPageInterface) {
   const [isModal, setIsModal] = useState<boolean>(false)
     const {data, preData, setData} = useGettingStartedStore()
+    const { currentUser, getUserCookie} = useAccessStore()
     useEffect(() => {
+      getUserCookie()
       setData(dbData)
     }, [])
  
@@ -28,10 +31,14 @@ export default function GettingStartedViewPage({ id, dbData }: GettingStartedVie
        <SpacerTertiary />
       <TitlePrimary title='View Getting Started' />
       <SpacerTertiary />
+      {Number(currentUser.isAdmin) === 1 &&
+      <>
       <div className="flex items-center justify-end">
         <ButtonPrimary title="Edit GettingStarted" onClick={() => setIsModal(true)} />
       </div>
       <SpacerTertiary />
+      </>
+      }
       
       <div className="bg-white drop-shadow p-6 flex flex-col items-start justify-center gap-2 rounded-xl">
         {/* Corrected fields to match GettingStartedInterface */}

@@ -15,6 +15,7 @@ import { useCenterStore } from "@/_store/useCenterStore";
 import LoaderPrimary from "@/_components/loaders/LoaderPrimary";
 import NoDataPrimary from "@/_components/NoDataPrimary";
 import { toast } from "react-toastify";
+import { useAccessStore } from "@/_store/useAccessStore";
 
 
 
@@ -34,9 +35,11 @@ export default function CenterListPage({dbData}: {dbData: any}) {
         search,
         setSearch,
     } = useCenterStore()
+    const { currentUser, setCurrentUser, getUserCookie} = useAccessStore()
 
 
     useEffect(() => {
+      getUserCookie()
       setDataList(dbData)
     }, [])
 
@@ -104,11 +107,13 @@ export default function CenterListPage({dbData}: {dbData: any}) {
                 }
               </button>
             </form>
-            <ButtonPrimary
-              onClick={() => setIsModal(!isModal)}
-              title='Add'
-              css="px-8 py-2"  
-            />
+            {Number(currentUser.roleLevel) === 3 || Number(currentUser.isAdmin) === 1 &&
+              <ButtonPrimary
+                onClick={() => setIsModal(!isModal)}
+                title='Add'
+                css="px-8 py-2"  
+              />
+            }
           </section>
 
           { dataList && dataList.length > 0  ? 
@@ -135,11 +140,13 @@ export default function CenterListPage({dbData}: {dbData: any}) {
                           <FaEye className="text-xl text-gray-800 group-hover:text-green-600 group-hover:scale-110 ease-initial transition-all duration-200" />
                         </Link>
                         </button>
+                        { Number(currentUser.isAdmin) === 1 &&
                         <button 
                           onClick={() => handleDelete(i.id)}
                           className="cursor-pointer group">
                           <FaDeleteLeft className="text-xl text-gray-800 group-hover:text-red-600 group-hover:scale-110 ease-initial transition-all duration-200" />
                         </button>
+                        }
                       </div>
                     </section>
                   ))}

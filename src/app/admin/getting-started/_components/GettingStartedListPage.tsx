@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import { formatDate } from "@/_utils/formatDate";
 import PaginationPrimary from "@/_components/pagination/PaginationPrimary";
 import NoDataPrimary from "@/_components/NoDataPrimary";
+import { useAccessStore } from "@/_store/useAccessStore";
 
 
 
@@ -29,7 +30,7 @@ const title = "Getting Started List"
 
 export default function GettingStartedListPage({ dbData }: { dbData: any }) {
     const [isModal, setIsModal] = useState<boolean>(false);
-    console.log('dbData', dbData)
+    const { currentUser, getUserCookie} = useAccessStore();
     const {
         setDataList, 
         dataList, 
@@ -42,13 +43,12 @@ export default function GettingStartedListPage({ dbData }: { dbData: any }) {
         getSearchDataList,
         search,
         setSearch,
-      } = useGettingStartedStore()
-      useEffect(() => {
-            setDataList(dbData)
-        }, [])
-
-
-  
+    } = useGettingStartedStore()
+    useEffect(() => {
+        getUserCookie()
+        setDataList(dbData)
+    }, [])
+    
       async function handleDelete(id: string | number){
           try{
               const res = await _gettingStartedDeleteAction(id) 
@@ -67,12 +67,12 @@ export default function GettingStartedListPage({ dbData }: { dbData: any }) {
       }
       
       const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
-              e.preventDefault();
-              try {
-                await getSearchDataList(search)
-              } catch (error) {
-                  console.error('Form submission error:', error);
-              }
+          e.preventDefault();
+          try {
+            await getSearchDataList(search)
+          } catch (error) {
+              console.error('Form submission error:', error);
+          }
       }
         
       if (isLoading) {
@@ -112,11 +112,13 @@ export default function GettingStartedListPage({ dbData }: { dbData: any }) {
               }
             </button>
           </form>
-          <ButtonPrimary
-            onClick={() => setIsModal(!isModal)}
-            title='Add'
-            css="px-8 py-2"  
-          />
+          {Number(currentUser.isAdmin) === 1 &&
+            <ButtonPrimary
+              onClick={() => setIsModal(!isModal)}
+              title='Add'
+              css="px-8 py-2"  
+            />
+          }
         </section>
 
          { dataList && dataList.length > 0  ? 
@@ -145,9 +147,11 @@ export default function GettingStartedListPage({ dbData }: { dbData: any }) {
                         <FaEye className="text-xl text-gray-800 group-hover:text-green-600 group-hover:scale-110 ease-initial transition-all duration-200" />
                       </Link>
                       </button>
+                      { Number(currentUser.isAdmin) === 1 &&
                       <button onClick={() => handleDelete(i.id)} className="cursor-pointer group">
                         <FaDeleteLeft className="text-xl text-gray-800 group-hover:text-red-600 group-hover:scale-110 ease-initial transition-all duration-200" />
                       </button>
+                      }
                     </div>
                   </section>
                 ))}

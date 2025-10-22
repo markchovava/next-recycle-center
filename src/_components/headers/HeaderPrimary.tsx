@@ -5,7 +5,7 @@ import LogoPrimary from '../logos/LogoPrimary'
 import { _logout } from '@/_actions/AuthActions'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
-import { AuthTokenCookieName, getTheCookie, removeTheCookie } from '@/_cookies/CookiesClient'
+import { AuthTokenCookieName, getTheCookie, removeTheCookie, UserCookieName } from '@/_cookies/CookiesClient'
 import { CookieValueTypes } from 'cookies-next'
 
 
@@ -22,6 +22,7 @@ export default function HeaderPrimary() {
         if(res.status == 1){
           toast.success(res.message)
           removeTheCookie(AuthTokenCookieName)
+          removeTheCookie(UserCookieName)
           router.push('/login')
           return
         }

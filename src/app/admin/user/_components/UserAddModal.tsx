@@ -74,6 +74,7 @@ export default function UserAddModal({
                     email: data.email,
                     address: data.address,
                     roleLevel: data.roleLevel,
+                    isAdmin: 0,
 
                 }
                 

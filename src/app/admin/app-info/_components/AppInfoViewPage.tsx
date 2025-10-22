@@ -9,6 +9,7 @@ import AppInfoEditModal from './AppInfoEditModal'
 import { AppInfoInterface } from '@/_data/entity/AppInfoEntity'
 import { useAppInfoStore } from '@/_store/useAppInfoStore'
 import LoaderPrimary from '@/_components/loaders/LoaderPrimary'
+import { useAccessStore } from '@/_store/useAccessStore'
 
 
 
@@ -16,8 +17,11 @@ const title = "App Information"
 
 export default function AppInfoViewPage({dbData}: {dbData: AppInfoInterface}) {
     const {setData, preData, isLoading} = useAppInfoStore()
+    const { currentUser, setCurrentUser, getUserCookie} = useAccessStore()
     const [isModal, setIsModal] = React.useState(false)
+
     useEffect(() => {
+      getUserCookie()
       setData(dbData)
     }, [])
 
@@ -36,10 +40,14 @@ export default function AppInfoViewPage({dbData}: {dbData: AppInfoInterface}) {
     <section className='mx-auto w-[92%]'>
         <TitlePrimary title={title} />
         <SpacerTertiary />
-        <div className="flex items-center justify-end">
-            <ButtonPrimary title="Edit App Information" onClick={() => setIsModal(!isModal)} />
-        </div>
-        <SpacerTertiary />
+        {Number(currentUser.isAdmin) == 1 && 
+        <>
+          <div className="flex items-center justify-end">
+              <ButtonPrimary title="Edit App Information" onClick={() => setIsModal(!isModal)} />
+          </div>
+          <SpacerTertiary />
+        </>
+        }
 
          <div className="bg-white drop-shadow p-6 flex flex-col items-start justify-center gap-4 rounded-xl">
             <RecordPrimary label="Name:" value={preData.name ?? "Not yet Added"} />

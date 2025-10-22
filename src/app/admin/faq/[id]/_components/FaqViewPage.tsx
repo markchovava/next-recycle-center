@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import FaqEditModal from "./FaqEditModal";
 import { FaqInterface } from "@/_data/entity/FaqEntity";
 import { useFaqStore } from "@/_store/useFaqStore";
+import { useAccessStore } from "@/_store/useAccessStore";
 
 
 interface FaqViewPageInterface{
@@ -17,7 +18,9 @@ interface FaqViewPageInterface{
 export default function FaqViewPage({ id, dbData }: FaqViewPageInterface) {
     const [isModal, setIsModal] = useState<boolean>(false)
     const {data, preData, setData} = useFaqStore()
+    const { currentUser, getUserCookie} = useAccessStore()
     useEffect(() => {
+      getUserCookie()
       setData(dbData)
     }, [])
  
@@ -28,10 +31,14 @@ export default function FaqViewPage({ id, dbData }: FaqViewPageInterface) {
        <SpacerTertiary />
       <TitlePrimary title='View FAQ' />
       <SpacerTertiary />
-      <div className="flex items-center justify-end">
-        <ButtonPrimary title="Edit Faq" onClick={() => setIsModal(true)} />
-      </div>
-      <SpacerTertiary />
+      { Number(currentUser.isAdmin) === 1 &&
+        <>
+          <div className="flex items-center justify-end">
+            <ButtonPrimary title="Edit Faq" onClick={() => setIsModal(true)} />
+          </div>
+          <SpacerTertiary />
+        </>
+      }
       
       <div className="bg-white drop-shadow p-6 flex flex-col items-start justify-center gap-2 rounded-xl">
         {/* Corrected fields to match FaqInterface */}

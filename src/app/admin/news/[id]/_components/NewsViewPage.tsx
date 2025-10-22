@@ -10,6 +10,7 @@ import { useNewsStore } from "@/_store/useNewsStore";
 import { formatDate } from "@/_utils/formatDate";
 import { BaseURL } from "@/_api/BaseURL";
 import ImagePrimary from "@/_components/images/ImagePrimary";
+import { useAccessStore } from "@/_store/useAccessStore";
 
 interface NewsViewPageInterface{
   id: string | number, 
@@ -19,8 +20,10 @@ interface NewsViewPageInterface{
 export default function NewsViewPage({ id, dbData }: NewsViewPageInterface) {
   const [isModal, setIsModal] = useState<boolean>(false)
     const {data, setImage, preData, setData} = useNewsStore()
-    console.log('dbData', dbData)
+    const { currentUser, getUserCookie} = useAccessStore()
+   
     useEffect(() => {
+      getUserCookie()
       setData(dbData)
       const img = dbData.image ? (BaseURL + dbData.image) : "";
           if (img) {
@@ -34,10 +37,14 @@ export default function NewsViewPage({ id, dbData }: NewsViewPageInterface) {
        <SpacerTertiary />
       <TitlePrimary title='View News' />
       <SpacerTertiary />
-      <div className="flex items-center justify-end">
-        <ButtonPrimary title="Edit News" onClick={() => setIsModal(true)} />
-      </div>
-      <SpacerTertiary />
+       {Number(currentUser.isAdmin) === 1 && 
+       <>
+        <div className="flex items-center justify-end">
+          <ButtonPrimary title="Edit News" onClick={() => setIsModal(true)} />
+        </div>
+        <SpacerTertiary />
+       </>
+      }
       
       <div className="bg-white drop-shadow p-6 flex flex-col items-start justify-center gap-2 rounded-xl">
         

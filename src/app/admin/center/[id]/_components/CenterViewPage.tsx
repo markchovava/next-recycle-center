@@ -14,6 +14,7 @@ import LoaderPrimary from "@/_components/loaders/LoaderPrimary";
 import { BaseURL } from "@/_api/BaseURL";
 import ImagePrimary from "@/_components/images/ImagePrimary";
 import { formatDate } from "@/_utils/formatDate";
+import { useAccessStore } from "@/_store/useAccessStore";
 
 
 
@@ -33,10 +34,11 @@ export default function CenterViewPage({ id, dbData }: CenterViewPageInterface )
       isLoading, 
       setImage
   } = useCenterStore()
+  const { currentUser, getUserCookie} = useAccessStore()
 
 
  useEffect(() => {
-    // Set data first, then set image
+    getUserCookie()
     setData(dbData)
     const img = dbData.image ? (BaseURL + dbData.image) : "";
     if (img) {
@@ -75,11 +77,13 @@ export default function CenterViewPage({ id, dbData }: CenterViewPageInterface )
         <SpacerTertiary />
         <TitlePrimary title={`View Center: ${preData.name ?? ""}`} />
         <SpacerTertiary />
-        <div className="flex items-center justify-end">
-          {/* Note: In a real app, you would pass setData and data to the modal for update */}
-          <ButtonPrimary title="Edit Center" onClick={() => setIsModal(true)} /> 
-        </div>
-        <SpacerTertiary />
+        {Number(currentUser.roleLevel) === 3 || Number(currentUser.isAdmin) === 1 &&
+        <>
+          <div className="flex items-center justify-end">
+            <ButtonPrimary title="Edit Center" onClick={() => setIsModal(true)} /> 
+          </div>
+          <SpacerTertiary />
+        </>}
 
         <div className="bg-white drop-shadow p-6 flex flex-col items-start justify-center gap-2 rounded-xl">
 
