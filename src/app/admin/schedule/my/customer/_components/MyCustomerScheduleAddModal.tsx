@@ -123,6 +123,7 @@ export default function MyCustomerScheduleAddModal({
                 await getScheduleOfCustomerDataList()
                 toast.success(res.message);
                 setIsModal(false);
+                resetData()
                 return
             }
             toast.error('Something went wrong. Please try again.');
@@ -132,7 +133,7 @@ export default function MyCustomerScheduleAddModal({
             console.error('Form submission error:', error);
         } finally {
             setIsSubmitting(false);
-            resetData()
+            
         }
     }
 
