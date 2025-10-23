@@ -3,6 +3,7 @@ import React from 'react'
 import CenterPage from './_components/CenterPage'
 import { Metadata } from 'next';
 import { AppInfoData } from '@/_data/sample/AppInfoData';
+import { centerListAction } from '@/_actions/CenterActions';
 
 
 export const metadata: Metadata = {
@@ -11,11 +12,13 @@ export const metadata: Metadata = {
 };
 
 
-export default function page() {
+export default async function page() {
+  const [ centerData ] = await Promise.all([centerListAction() ]);
+
   return (
     <>
     <HeaderTertiary title='Recycle Centers' />
-    <CenterPage />
+    <CenterPage centerData={centerData} />
     </>
   )
 }

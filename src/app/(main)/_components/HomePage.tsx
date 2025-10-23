@@ -14,9 +14,19 @@ import TitleTertiary from "@/_components/titles/TitleTertiary"
 import FormContact from "@/_components/forms/FormContact"
 import AboutSection from "@/_components/sections/AboutSection"
 import SolutionsSection from "@/_components/sections/SolutionsSection"
+import { CenterInterface } from "@/_data/entity/CenterEntity"
+import { useCenterStore } from "@/_store/useCenterStore"
+import { useEffect } from "react"
+import { FaqInterface } from "@/_data/entity/FaqEntity"
 
 
-export default function HomePage() {
+interface HomePageProps{
+    centerData: any
+    faqData: FaqInterface[]
+}
+
+
+export default function HomePage({ centerData, faqData }: HomePageProps) {
   return (
     <>
     <SpacerPrimary />
@@ -42,7 +52,7 @@ export default function HomePage() {
                     btnHref="/center" 
                 />
                 <SpacerTertiary />
-                <CarouselPrimary />
+                <CarouselPrimary dbData={centerData} />
             </div>
             <SpacerSecondary />
         </section>
@@ -59,7 +69,7 @@ export default function HomePage() {
                     btnHref="/faq" 
                 />
                 <SpacerTertiary />
-               {FaqData.map((i, key) => (
+               {faqData.map((i, key) => (
                     key < 8 &&
                    <TabPrimary key={key} dbData={i} />
                ))}

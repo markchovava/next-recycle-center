@@ -141,12 +141,6 @@ export const useMessageStore = create<MessageStoreInterface>((set, get) => ({
             errors.email = emailError;
             hasError = true;
         }
-        // Validate title
-        const titleError = get().validateField("title", data.title);
-        if (titleError) {
-            errors.title = titleError;
-            hasError = true;
-        }
         // Validate PHONE
         const messageError = get().validateField("message", data.message);
         if (messageError) {

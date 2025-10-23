@@ -4,6 +4,7 @@ import { PageByIdInterface } from "@/_data/interface/PageByIdInterface";
 import SpacerPrimary from "@/_components/spacers/SpacerPrimary";
 import { Metadata } from "next";
 import { AppInfoData } from "@/_data/sample/AppInfoData";
+import { centerViewAction } from "@/_actions/CenterActions";
 
 
 export const metadata: Metadata = {
@@ -12,13 +13,14 @@ export const metadata: Metadata = {
 };
 
 
-export default function page({params: {id}}: PageByIdInterface) {
+export default async function page({params: {id}}: PageByIdInterface) {
+  const [ centerData ] = await Promise.all([centerViewAction(id)]);
   return (
     <>
     <HeaderTertiary title='View Center' />
 
     <SpacerPrimary />
-    <CenterViewPage id={id} />
+    <CenterViewPage id={id} dbData={centerData.data} />
     
     <SpacerPrimary />
     </>

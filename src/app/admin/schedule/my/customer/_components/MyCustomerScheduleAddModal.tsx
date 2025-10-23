@@ -53,7 +53,7 @@ export default function MyCustomerScheduleAddModal({
         validateCustomerForm,
         errors,
         setError,
-        getScheduleOfCustomerDataList
+        getScheduleByCustomerDataList
     } = useScheduleStore()
     const [centerList, setCenterList] = useState(
         centerData.length > 0 
@@ -71,7 +71,6 @@ export default function MyCustomerScheduleAddModal({
       resetData()
     }, [])
 
-   
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -120,7 +119,7 @@ export default function MyCustomerScheduleAddModal({
             console.log("API Response:", res);
 
             if(res.status == 1) {
-                await getScheduleOfCustomerDataList()
+                await getScheduleByCustomerDataList()
                 toast.success(res.message);
                 setIsModal(false);
                 resetData()

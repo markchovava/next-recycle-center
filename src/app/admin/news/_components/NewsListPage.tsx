@@ -40,41 +40,35 @@ export default function NewsListPage({dbData}: any) {
         setSearch,
     } = useNewsStore()
     const { currentUser, getUserCookie} = useAccessStore()
-
-  
-      useEffect(() => {
+    useEffect(() => {
         getUserCookie();
         setDataList(dbData)
-      }, [])
-
-      async function handleDelete(id: string | number){
-          try{
-              const res = await _newsDeleteAction(id) 
-              const {data, status, message} = res
-              if(status === 1) {
-                toast.warn(message)
-                await getDataList()
-              }
-          }catch(error){
-            console.error('Delete error: ', error);
-          }
-      }
-      
-      
-      async function handlePaginate(url: string) {
+    }, [])
+    async function handleDelete(id: string | number){
+        try{
+            const res = await _newsDeleteAction(id) 
+            const {data, status, message} = res
+            if(status === 1) {
+              toast.warn(message)
+              await getDataList()
+            }
+        }catch(error){
+          console.error('Delete error: ', error);
+        }
+    }     
+    async function handlePaginate(url: string) {
         await getPaginatedDataList(url)
-      }
-      
-      const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
-          e.preventDefault();
-          try {
-            await getSearchDataList(search)
-          } catch (error) {
-              console.error('Form submission error:', error);
-          }
-      }
-      
-      if (isLoading) {
+    }  
+    const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        try {
+          await getSearchDataList(search)
+        } catch (error) {
+            console.error('Form submission error:', error);
+        }
+    }  
+    
+    if (isLoading) {
           return (
             <section className="w-[92%] mx-auto">
               <TitlePrimary title={title} />

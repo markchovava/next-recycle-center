@@ -1,9 +1,11 @@
+import { Metadata } from "next";
 import { PageByIdInterface } from "@/_data/interface/PageByIdInterface";
 import NewsViewPage from "./_components/NewsViewPage";
 import HeaderTertiary from "@/_components/headers/HeaderTertiary";
 import SpacerPrimary from "@/_components/spacers/SpacerPrimary";
-import { Metadata } from "next";
 import { AppInfoData } from "@/_data/sample/AppInfoData";
+import { newsViewAction } from "@/_actions/NewsActions";
+
 
 
 export const metadata: Metadata = {
@@ -13,6 +15,7 @@ export const metadata: Metadata = {
 
 
 export default async function page({params: {id} }: PageByIdInterface) {
+  const [ newsData ] = await Promise.all([ newsViewAction(id) ])
 
 
   return (
@@ -20,7 +23,7 @@ export default async function page({params: {id} }: PageByIdInterface) {
     <HeaderTertiary title='News' />
     
     <SpacerPrimary />
-    <NewsViewPage id={id} />
+    <NewsViewPage id={id} dbData={newsData.data} />
     
     <SpacerPrimary />
     </>

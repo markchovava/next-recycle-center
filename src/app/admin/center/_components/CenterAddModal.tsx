@@ -220,7 +220,7 @@ export default function CenterAddModal({
                              <TextInputPrimary
                                 label='Latitude:'
                                 name='latitude'
-                                type="number"
+                                type="text"
                                 value={data.latitude}
                                 placeholder='Latitude'
                                 onChange={setInputValue}
@@ -228,7 +228,7 @@ export default function CenterAddModal({
                             <TextInputPrimary
                                 label='Longitude:'
                                 name='longitude'
-                                type="number"
+                                type="text"
                                 value={data.longitude}
                                 placeholder='Longitude'
                                 onChange={setInputValue}

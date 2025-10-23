@@ -85,8 +85,6 @@ export default function FaqListPage({ dbData }: { dbData: any }) {
     }
 
 
-    console.log("dataList", dataList)
-
   return (
     <>
      <section className='mx-auto w-[92%]'>

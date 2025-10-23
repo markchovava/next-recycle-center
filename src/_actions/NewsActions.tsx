@@ -7,6 +7,53 @@ import { redirect } from "next/navigation";
 
 
 
+
+export async function newsViewAction(id: number | string) {
+    const res = await fetch(`${BaseURL}news/${id}`, {
+      'method': 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    });
+    return await res.json();
+}
+
+
+export async function newsPriorityStatusListAction() {
+    const res = await fetch(`${BaseURL}news-priority-status/`, {
+      'method': 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    });
+    return await res.json();
+}
+
+export async function newsSearchPriorityStatusListAction(search: string) {
+    const res = await fetch(`${BaseURL}news-priority-status/${search}`, {
+      'method': 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    });
+    return await res.json();
+}
+
+
+export async function newsListAction() {
+    const res = await fetch(`${BaseURL}news/`, {
+      'method': 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    });
+    return await res.json();
+}
+
 export async function _newsSearchAction(search: string) {
     const cookieStore = await cookies();
     const authToken = await cookieStore.get('RECYCLEMATE_AUTH_TOKEN_COOKIE');
@@ -77,7 +124,7 @@ export async function _newsViewAction(id: number | string) {
     const authToken = await cookieStore.get('RECYCLEMATE_AUTH_TOKEN_COOKIE');
     if(!authToken?.value){ redirect('/login'); }
 
-    const res = await fetch(`${BaseURL}news/${id}`, {
+    const res = await fetch(`${BaseURL}api/news/${id}`, {
       'method': 'GET',
       headers: {
         'Authorization': `Bearer ${authToken?.value}`,
@@ -98,7 +145,7 @@ export async function _newsStoreAction(data: FormData) {
       'body': data,
       headers: {
         'Authorization': `Bearer ${authToken?.value}`,
-      }
+      } 
     });
     revalidatePath('/admin/news');
     return await res.json();

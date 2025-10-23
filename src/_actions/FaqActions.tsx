@@ -7,15 +7,22 @@ import { redirect } from "next/navigation";
 
 
 
+export async function faqListAction() {
+    const res = await fetch(`${BaseURL}faq/`, {
+      'method': 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    });
+    return await res.json();
+}
+
 export async function _faqSearchAction(search: string) {
-    const cookieStore = await cookies();
-    const authToken = await cookieStore.get('RECYCLEMATE_AUTH_TOKEN_COOKIE');
-    if(!authToken?.value){ redirect('/login'); }
     
     const res = await fetch(`${BaseURL}api/faq-search/${search}`, {
       'method': 'GET',
       headers: {
-        'Authorization': `Bearer ${authToken?.value}`,
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       }

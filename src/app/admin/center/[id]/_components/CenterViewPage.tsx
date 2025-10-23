@@ -26,6 +26,7 @@ interface CenterViewPageInterface{
 
 
 export default function CenterViewPage({ id, dbData }: CenterViewPageInterface ) {
+  const noImage = "/assets/img/no_photo.jpg"
   // Find the center item using the ID
   const {
       data, 
@@ -69,7 +70,6 @@ export default function CenterViewPage({ id, dbData }: CenterViewPageInterface )
   }
 
 
-  console.log('preData: ', preData)
 
   return (
     <>
@@ -93,7 +93,7 @@ export default function CenterViewPage({ id, dbData }: CenterViewPageInterface )
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full pb-4">
             {preData.imageURL && (
               <ImagePrimary 
-                src={preData.imageURL} 
+                src={preData.imageURL ? preData.imageURL : noImage} 
                 label="Image" 
               />
             )}

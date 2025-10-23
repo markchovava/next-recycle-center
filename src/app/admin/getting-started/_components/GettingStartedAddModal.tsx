@@ -25,6 +25,9 @@ const variants: Variants = {
         }},
 }
 
+
+const title = "Add Getting Started"
+
 interface FaqAddModalInterface{
     isModal: boolean,
     setIsModal: React.Dispatch<React.SetStateAction<boolean>>
@@ -107,10 +110,10 @@ export default function FaqAddModal({
 
                     <form onSubmit={handleSubmit} className='flex flex-col items-start justify-center gap-4'>
                         <div className='w-full'>
-                            <TitlePrimary title="Add FAQ" />
+                            <TitlePrimary title={title} />
                         </div>
                         <TextInputPrimary
-                            label='Question:' 
+                            label='Title:' 
                             name='title' 
                             type="text"
                             value={data.title} 
@@ -118,10 +121,10 @@ export default function FaqAddModal({
                             onChange={setInputValue} 
                         />
                         <TextAreaPrimary
-                            label='Answer:' 
+                            label='Content:' 
                             name='content' 
                             value={data.content} 
-                            placeholder='Enter your Details...'
+                            placeholder='Enter your Content...'
                             onChange={setInputValue} 
                         />
                         <div className='w-full flex items-center justify-center pt-1'>

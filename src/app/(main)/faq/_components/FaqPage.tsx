@@ -3,60 +3,88 @@ import FadeSlideIn from "@/_components/_effects/FadeSlideIn";
 
 import FormSearch from "@/_components/forms/FormSearch";
 import Heading2 from "@/_components/headings/Heading2";
+import LoaderPrimary from "@/_components/loaders/LoaderPrimary";
 import PaginationPrimary from "@/_components/pagination/PaginationPrimary";
 import SpacerPrimary from "@/_components/spacers/SpacerPrimary";
 import SpacerQuaternary from "@/_components/spacers/SpacerQuaternary";
 import SpacerSecondary from "@/_components/spacers/SpacerSecondary";
 import SpacerTertiary from "@/_components/spacers/SpacerTertiary";
 import TabPrimary from "@/_components/tabs/TabPrimary";
+import TitlePrimary from "@/_components/titles/TitlePrimary";
 import TitleTertiary from "@/_components/titles/TitleTertiary";
 import { CenterData } from "@/_data/sample/CenterData";
 import { FaqData } from "@/_data/sample/FaqData";
-import { useState } from "react";
+import { useFaqStore } from "@/_store/useFaqStore";
+import { useEffect, useState } from "react";
 
 
-const InputData = {
-    search: "",
-    isSearch: false,
-}
+const title ="Search FAQs"
 
-export default function FaqPage() {
-    const [data, setData] = useState(InputData)
+
+
+export default function FaqPage({ dbData }: {dbData: any}) {
+
+    const [isModal, setIsModal] = useState<boolean>(false);
+    const {
+        setDataList, 
+        dataList, 
+        isSearching, 
+        isLoading,
+        meta, 
+        links, 
+        getDataList,
+        getPaginatedDataList,
+        getSearchDataList,
+        search,
+        setSearch,
+    } = useFaqStore()
     
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setData({...data, [e.target.name]: e.target.value})
-    }
+    useEffect(() => {
+        setDataList(dbData)
+    }, [])
+    
+     
+        async function handlePaginate(url: string) {
+            await getPaginatedDataList(url)
+        }
+        
+        const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+                e.preventDefault();
+                try {
+                  await getSearchDataList(search)
+                } catch (error) {
+                    console.error('Form submission error:', error);
+                }
+        }
+          
+        if (isLoading) {
+            return (
+              <section className="w-[92%] mx-auto">
+                <TitlePrimary title={title} />
+                <SpacerTertiary />
+                <LoaderPrimary />
+              </section>
+            );
+        }
 
-    const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setData({...data, isSearch: true})
-        try {
-            // Add your form submission logic here
-            console.log('Form data:', data);
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));    
-        } catch (error) {
-            console.error('Form submission error:', error);
-        } finally {
-            setData({...data, isSearch: false})
-        }  
-    }
+
+
   return (
     <>
     <SpacerPrimary />
     
          <div className="mx-auto lg:w-[70%] w-[92%]">
             <div className="flex items-center justify-center">
-                <Heading2 title="Search Recycle Centers" />
+                <Heading2 title={title} />
             </div>
             <SpacerQuaternary />
             <FormSearch 
                 name="search"
                 css="rounded-full w-full px-4 py-3"
-                onChange={handleInput}
+                onChange={setSearch}
                 handleSearch={handleSearch}
-                value={data.search} 
-                isSearch={data.isSearch} 
+                value={search} 
+                isSearch={isSearching} 
                 placeholder="Enter Question here.."  />
         </div>
 
@@ -70,8 +98,7 @@ export default function FaqPage() {
                         btnHref="" 
                     />
                     <SpacerTertiary />
-                    {FaqData.map((i, key) => (
-                        key < 8 &&
+                    {dataList.map((i, key) => (
                         <TabPrimary key={key} dbData={i} />
                     ))}
 

@@ -11,9 +11,17 @@ import 'swiper/css/pagination';
 import Link from 'next/link';
 import { CenterData } from '@/_data/sample/CenterData';
 import CardCenter from '../cards/CardCenter';
+import { useCenterStore } from '@/_store/useCenterStore';
 
 
-export default function CarouselPrimary() {
+
+
+export default function CarouselPrimary({dbData}: {dbData: any}) {
+  const {setDataList, dataList} = useCenterStore()
+  useEffect(() => {
+      setDataList(dbData)
+  }, [])
+
   const [windowWidth, setWindowWidth] = useState<number>(0);
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
   const [activeIndex, setActiveIndex] = useState<number>(0);
@@ -66,7 +74,7 @@ export default function CarouselPrimary() {
         className="mb-6"
       >
         {/* slides */}
-        {CenterData.map((i, key) => (
+        {dataList.map((i, key) => (
           <SwiperSlide key={key} className='p-2'>
             <CardCenter dbData={i} />
           </SwiperSlide>

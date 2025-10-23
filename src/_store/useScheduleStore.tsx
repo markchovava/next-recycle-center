@@ -1,5 +1,5 @@
 "use client"
-import { _scheduleByCustomerSearchAction, _scheduleOfCustomerIndexAction, _scheduleOfRecyclerIndexAction, _scheduleSearchCustomerAction, _scheduleSearchRecyclerAction, _scheduleViewAction } from "@/_actions/ScheduleActions";
+import { _scheduleByCustomerIndexAction, _scheduleByCustomerSearchAction, _scheduleOfCustomerIndexAction, _scheduleOfRecyclerIndexAction, _scheduleSearchCustomerAction, _scheduleSearchRecyclerAction, _scheduleViewAction } from "@/_actions/ScheduleActions";
 import { MetaEntity, MetaInterface, MetaLinksEntity, MetaLinksInterface } from "@/_data/entity/ResponseEntity";
 import { ScheduleEntity, ScheduleInterface } from "@/_data/entity/ScheduleEntity";
 import { create } from "zustand";
@@ -48,7 +48,8 @@ interface ScheduleStoreInterface{
     getScheduleOfRecyclerDataList: () => Promise<void>,
     getSearchScheduleRecyclerDataList: (search: string) => Promise<void>,
     getScheduleData: (id: number | string) => Promise<void>,
-    getSearchScheduleByCustomerDataList: (search: string) => Promise<void>
+    getSearchScheduleByCustomerDataList: (search: string) => Promise<void>,
+    getScheduleByCustomerDataList: () => Promise<void>,
    
 }
 
@@ -473,5 +474,34 @@ export const useScheduleStore = create<ScheduleStoreInterface>((set, get) => ({
                 isLoading: false,
             });
         }
-    }
+    },
+    getScheduleByCustomerDataList: async () => {
+        set({ isLoading: true });
+            try {
+                const res = await _scheduleByCustomerIndexAction();
+                if (res && res.data && res.meta && res.links) {
+                    set({
+                        dataList: res.data,
+                        meta: res.meta,
+                        links: res.links,
+                        isLoading: false,
+                    });
+                } else {
+                    set({
+                        dataList: Array.isArray(res) ? res : res.data || [],
+                        meta: res.meta || MetaEntity,
+                        links: res.links || MetaLinksEntity,
+                        isLoading: false,
+                    });
+                }
+            } catch (error) {
+                console.error(`Error: ${error}`);
+                set({
+                    dataList: [],
+                    meta: MetaEntity,
+                    links: MetaLinksEntity,
+                    isLoading: false,
+                });
+            }
+    },
 })) 

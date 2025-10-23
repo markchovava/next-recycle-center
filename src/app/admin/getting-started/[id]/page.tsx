@@ -16,8 +16,8 @@ export default async function page({params: {id}}: PageByIdInterface) {
         {id: 1, name: "Home", href:"/"},
         {id: 2, name: "Dashboard", href:"/admin"},
         {id: 2, name: "Help", href:"/admin/help"},
-        {id: 3, name: "Faqs", href:"/admin/getting-started"},
-        {id: 4, name: "View Faq", href: `/admin/getting-started/${id}`},
+        {id: 3, name: "Getting Started", href:"/admin/getting-started"},
+        {id: 4, name: "View Getting Started", href: `/admin/getting-started/${id}`},
     ]
 
   return (

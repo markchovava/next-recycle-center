@@ -50,6 +50,7 @@ interface NewsStoreInterface{
     setImageFile: (file: File | null) => void,
     setNewImageFile: (file: File | null) => void,
     getSearchDataList: (search: string) => void,
+    getSearchPriorityStatusDataList: (search: string) => Promise<void>
 }
 
 
@@ -65,18 +66,15 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
     search: "",
     isSubmitting: false,
     dataList: [],
-    
     // Actions
     setMessage: (msg) => {
         set({ message: msg })
     },
-
     resetData: () => {
         set({
             data: NewsEntity,
         })
     },
-    
     setImage: (img) => {
         set((state) => ({
             data: {
@@ -88,13 +86,11 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
                 imageURL: img
             }
         }))
-    },
-    
+    }, 
     setSearch: (e) => {
         const { value } = e.target;
         set({ search: value })
     },
-    
     setNewImageFile: (file) => {
         set((state) => ({
             data: {
@@ -103,7 +99,6 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
             }
         }))
     },
-    
     setImageFile: (file) => {
         set((state) => ({
             data: {
@@ -112,7 +107,6 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
             }
         }))
     },
-    
     setInputValue: (e) => {
         const { name, value } = e.target;
         const currentData = get().data;
@@ -129,7 +123,6 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
                 : currentErrors
         });
     },
-    
     setData: (data) => {
         set({
             data: data,
@@ -137,7 +130,6 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
             isLoading: false,
         })
     },
-    
     setDataList: (res) => {
         const {links, meta, data} = res
         set({
@@ -147,11 +139,9 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
             isLoading: false,
         })
     },
-    
     setIsSubmitting: (status) => {
         set({isSubmitting: status})
     },
-    
     validateField: (name, value) => {
         let error = ""
         switch(name){
@@ -175,7 +165,6 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
         }
         return error
     },
-    
     validateForm: () => { 
         const { data } = get();
         let errors: Partial<Record<keyof NewsInterface, string>> = {};
@@ -208,12 +197,10 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
             isValid: !hasError,
             errors
         };
-    },
-    
+    }, 
     clearErrors: () => {
         set({ errors: {} })
-    },
-    
+    },   
     setError: (field, message) => {
         set((state) => ({
             errors: {
@@ -222,7 +209,6 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
             }
         }));
     },
-    
     setDelete: async (id) => {
         set({ isSubmitting: true });
         try {
@@ -248,7 +234,6 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
             });
         }
     },
-    
     setUpdate: async (id) => {
         const { data } = get();
         const validation = get().validateForm();
@@ -302,7 +287,6 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
             });
         }
     },
-    
     setStore: async (data) => {
         const validation = get().validateForm();
         
@@ -354,7 +338,6 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
             });
         }
     },
-    
     getDataList: async () => {
         set({ isLoading: true });
         try {
@@ -383,8 +366,7 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
                 isLoading: false,
             });
         }
-    },
-    
+    }, 
     getData: async (id) => {
         set({ isLoading: true });
         try {
@@ -417,8 +399,7 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
                 isLoading: false,
             });
         }
-    },
-    
+    }, 
     getPaginatedDataList: async (url) => {
         set({ isLoading: true });
         try {
@@ -447,9 +428,37 @@ export const useNewsStore = create<NewsStoreInterface>((set, get) =>({
                 isLoading: false,
             });
         }
-    },
-    
+    },   
     getSearchDataList: async (search) => {
+        set({ isSearching: true });
+        try {
+            const res = await _newsSearchAction(search);
+            if (res && res.data && res.meta && res.links) {
+                set({
+                    dataList: res.data,
+                    meta: res.meta,
+                    links: res.links,
+                    isSearching: false,
+                });
+            } else {
+                set({
+                    dataList: Array.isArray(res) ? res : res.data || [],
+                    meta: res.meta || MetaEntity,
+                    links: res.links || MetaLinksEntity,
+                    isSearching: false,
+                });
+            }
+        } catch (error) {
+            console.error(`Error: ${error}`);
+            set({
+                dataList: [],
+                meta: MetaEntity,
+                links: MetaLinksEntity,
+                isSearching: false,
+            });
+        }
+    },
+    getSearchPriorityStatusDataList: async (search) => {
         set({ isSearching: true });
         try {
             const res = await _newsSearchAction(search);

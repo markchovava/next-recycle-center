@@ -1,3 +1,4 @@
+import { StaticImport } from "next/dist/shared/lib/get-img-props"
 import { UserEntity, UserInterface } from "./UserEntity"
 
 export interface CenterInterface{

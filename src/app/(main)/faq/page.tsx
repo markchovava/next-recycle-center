@@ -2,6 +2,7 @@ import HeaderTertiary from "@/_components/headers/HeaderTertiary";
 import FaqPage from "./_components/FaqPage";
 import { Metadata } from "next";
 import { AppInfoData } from "@/_data/sample/AppInfoData";
+import { faqListAction } from "@/_actions/FaqActions";
 
 
 export const metadata: Metadata = {
@@ -10,11 +11,12 @@ export const metadata: Metadata = {
 };
 
 
-export default function page() {
+export default async function page() {
+  const [ faqData ] = await Promise.all([ faqListAction() ]);
   return (
     <>
     <HeaderTertiary title='FAQs' />
-    <FaqPage />
+    <FaqPage dbData={faqData} />
     </>
   )
 }
