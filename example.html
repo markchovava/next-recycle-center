@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bin Collection Request</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            color: #667eea;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        label {
+            color: #555;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        input, select, textarea {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #fef3c7;
+            color: #92400e;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+        
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+        
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        
+        .datetime-info {
+            background: #f9fafb;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗑️ Bin Collection Request</h1>
+        <p class="subtitle">Fill in your details to schedule a waste collection</p>
+        
+        <form id="binNotificationForm">
+            <!-- Customer Information Section -->
+            <div class="section">
+                <h2 class="section-title">Customer Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="customerId">Customer ID *</label>
+                        <input type="text" id="customerId" name="customerId" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customerName">Full Name *</label>
+                        <input type="text" id="customerName" name="customerName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customerPhone">Phone Number *</label>
+                        <input type="tel" id="customerPhone" name="customerPhone" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="customerAddress">Address *</label>
+                        <textarea id="customerAddress" name="customerAddress" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Request Status</label>
+                        <span class="status-badge">Requested</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Request Date & Time</label>
+                        <div class="datetime-info" id="datetimeDisplay"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Collection Center Section -->
+            <div class="section">
+                <h2 class="section-title">Collection Center</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="centerId">Center ID *</label>
+                        <input type="text" id="centerId" name="centerId" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="centerName">Center Name *</label>
+                        <input type="text" id="centerName" name="centerName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="centerPhone">Center Phone *</label>
+                        <input type="tel" id="centerPhone" name="centerPhone" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="centerAddress">Center Address *</label>
+                        <textarea id="centerAddress" name="centerAddress" required></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-submit" id="submitBtn">
+                Submit Request
+            </button>
+            
+            <div class="message" id="message"></div>
+        </form>
+    </div>
+
+    <script>
+        // Configuration - Replace these with your actual values
+        const BaseURL = 'https://www.fldesigners.xyz/';
+        
+        // Update datetime display
+        function updateDateTime() {
+            const now = new Date();
+            const date = now;
+            const time = now;
+            document.getElementById('datetimeDisplay').textContent = `${date} at ${time}`;
+        }
+        
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+        
+        // API submission function
+        async function binNotificationSubmit(data) {
+            const res = await fetch(`${BaseURL}schedule-of-customer-unauth/`, {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            });
+            return await res.json();
+        }
+        
+        // Show message
+        function showMessage(text, type) {
+            const msgEl = document.getElementById('message');
+            msgEl.textContent = text;
+            msgEl.className = `message ${type}`;
+            msgEl.style.display = 'block';
+            
+            setTimeout(() => {
+                msgEl.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Form submission handler
+        document.getElementById('binNotificationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            const now = new Date();
+            const formData = {
+                customerId: document.getElementById('customerId').value,
+                customerName: document.getElementById('customerName').value,
+                customerPhone: document.getElementById('customerPhone').value,
+                customerAddress: document.getElementById('customerAddress').value,
+                customerStatus: "Requested",
+                requestTime: now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+                requestDate: now.toLocaleDateString('en-US'),
+                centerId: document.getElementById('centerId').value,
+                centerName: document.getElementById('centerName').value,
+                centerPhone: document.getElementById('centerPhone').value,
+                centerAddress: document.getElementById('centerAddress').value
+            };
+            
+            try {
+                const result = await binNotificationSubmit(formData);
+                showMessage('Request submitted successfully! You will be contacted soon.', 'success');
+                document.getElementById('binNotificationForm').reset();
+                console.log('Success:', result);
+            } catch (error) {
+                showMessage('Failed to submit request. Please try again.', 'error');
+                console.error('Error:', error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Request';
+            }
+        });
+    </script>
+</body>
+</html>
